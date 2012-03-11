@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOTROendecrypt", "LOTROendecrypt\LOTROendecrypt.csproj", "{AA2C8FD2-54A6-4016-BC18-0A5C60B7BB3B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatePacketsFromWiresharkHexDump", "CreatePacketsFromWiresharkHexDump\CreatePacketsFromWiresharkHexDump.csproj", "{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOTROServer", "LOTROServer\LOTROServer.csproj", "{80770937-969A-40F1-8FD1-FF9FC1021343}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOTROendecryptClient", "LOTROendecryptClient\LOTROendecryptClient.csproj", "{6636BF97-0361-4AFF-BAF2-BEC426D9A61B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOTROPacketCaptureAndAutoDecryption", "LOTROPacketCaptureAndAutoDecryption\LOTROPacketCaptureAndAutoDecryption.csproj", "{D269D081-3F75-4B8D-82C3-5468D5A4DE4E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AA2C8FD2-54A6-4016-BC18-0A5C60B7BB3B}.Debug|x86.ActiveCfg = Debug|x86
+		{AA2C8FD2-54A6-4016-BC18-0A5C60B7BB3B}.Debug|x86.Build.0 = Debug|x86
+		{AA2C8FD2-54A6-4016-BC18-0A5C60B7BB3B}.Release|x86.ActiveCfg = Release|x86
+		{AA2C8FD2-54A6-4016-BC18-0A5C60B7BB3B}.Release|x86.Build.0 = Release|x86
+		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Debug|x86.ActiveCfg = Debug|x86
+		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Debug|x86.Build.0 = Debug|x86
+		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Release|x86.ActiveCfg = Release|x86
+		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Release|x86.Build.0 = Release|x86
+		{80770937-969A-40F1-8FD1-FF9FC1021343}.Debug|x86.ActiveCfg = Debug|x86
+		{80770937-969A-40F1-8FD1-FF9FC1021343}.Debug|x86.Build.0 = Debug|x86
+		{80770937-969A-40F1-8FD1-FF9FC1021343}.Release|x86.ActiveCfg = Release|x86
+		{80770937-969A-40F1-8FD1-FF9FC1021343}.Release|x86.Build.0 = Release|x86
+		{6636BF97-0361-4AFF-BAF2-BEC426D9A61B}.Debug|x86.ActiveCfg = Debug|x86
+		{6636BF97-0361-4AFF-BAF2-BEC426D9A61B}.Debug|x86.Build.0 = Debug|x86
+		{6636BF97-0361-4AFF-BAF2-BEC426D9A61B}.Release|x86.ActiveCfg = Release|x86
+		{6636BF97-0361-4AFF-BAF2-BEC426D9A61B}.Release|x86.Build.0 = Release|x86
+		{D269D081-3F75-4B8D-82C3-5468D5A4DE4E}.Debug|x86.ActiveCfg = Debug|x86
+		{D269D081-3F75-4B8D-82C3-5468D5A4DE4E}.Debug|x86.Build.0 = Debug|x86
+		{D269D081-3F75-4B8D-82C3-5468D5A4DE4E}.Release|x86.ActiveCfg = Release|x86
+		{D269D081-3F75-4B8D-82C3-5468D5A4DE4E}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
