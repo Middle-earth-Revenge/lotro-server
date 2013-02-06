@@ -18,7 +18,7 @@ namespace LOTROServer
     {
         private int numberClientPacket = 2;
         private UdpClient client = null;
-        private TcpListener tcp = null;
+        //private TcpListener tcp = null;
         private IPEndPoint anyIP = null;
         private bool inSession = false;
 
@@ -53,8 +53,8 @@ namespace LOTROServer
             uint dateTimeSpanClientStarted = br.ReadUInt32(); // 29 2d e5 4e
 
             // Session SimpleBlob
-            uint lenghtBlob = br.ReadUInt32(); // 8c 00 00 00 (140) Länge von Blob
-            byte[] simpleBlob = br.ReadBytes((int)lenghtBlob); // encrypted session key inside simple blob
+            //uint lenghtBlob = br.ReadUInt32(); // 8c 00 00 00 (140) Länge von Blob
+            //byte[] simpleBlob = br.ReadBytes((int)lenghtBlob); // encrypted session key inside simple blob
 
             uint lenghtEncrypted = br.ReadUInt32(); // 51 01 00 00 // Account verschlüsselt
             byte[] encrypted = br.ReadBytes((int)lenghtEncrypted); // 
@@ -65,7 +65,7 @@ namespace LOTROServer
             System.Diagnostics.Debug.WriteLine("positionString:" + positionString + " i2:" + i2 + " a:" + a + " i3:" + i3 + " i4:" + i4 + " DueTime:" + dueTime + " i5:" + i5 + " i6:" + i6 + " ClientVer.:" + clientVersion + " lenghtRest:" + lenghtRest
                 + " b:" + b + " i8:" + i8 + " c" + c + " i9:" + i9 + " Uhrzeit Client:" + clientStarted + " LenghtEncrypted:" + lenghtEncrypted);
 
-            byte[] sessionKey = HelperMethods.Instance.extractSessionKeyFrom1stClientPacket(simpleBlob);
+            //byte[] sessionKey = HelperMethods.Instance.extractSessionKeyFrom1stClientPacket(simpleBlob);
 
             byte[] decrypted = HelperMethods.Instance.RC4ToBytes(encrypted);
 
@@ -89,11 +89,11 @@ namespace LOTROServer
         {
             byte[] answerData = null;
 
-            ushort lengthBlock = br.ReadUInt16(); // length data-block
-            uint i2 = br.ReadUInt32(); // 00 00 08 00 don't know, maybe indicator what kind of (packet)action
-            uint i3 = br.ReadUInt32(); // 00 00 00 00 sequence number
-            byte[] sessionToken = br.ReadBytes(8); // could be
-            byte[] dataBlock = br.ReadBytes(lengthBlock); // needs to seperated further, two following zeros divides maybe the data
+            //ushort lengthBlock = br.ReadUInt16(); // length data-block
+			//uint i2 = br.ReadUInt32(); // 00 00 08 00 don't know, maybe indicator what kind of (packet)action
+			//uint i3 = br.ReadUInt32(); // 00 00 00 00 sequence number
+			//byte[] sessionToken = br.ReadBytes(8); // could be
+			//byte[] dataBlock = br.ReadBytes(lengthBlock); // needs to seperated further, two following zeros divides maybe the data
       
             // fire them all only to packet 33, because 34 fires the connect to the "join world server" in my packet constellation
             for (int i = 1; i < 5; i++)
@@ -302,7 +302,7 @@ namespace LOTROServer
 
             //byte[] dataX = prg.ReadFully("terminate_connection.bin",-1);
 
-            UdpClient sender = new UdpClient();
+            //UdpClient sender = new UdpClient();
             //sender.Connect();
             //sender.Send(dataX, dataX.Length, "74.201.107.43", 9003);
 
@@ -317,13 +317,14 @@ namespace LOTROServer
                 try
                 {
 
-                    IPEndPoint anyIP2 = new IPEndPoint(IPAddress.Any, 0);
-                    byte[] data = client2.Receive(ref anyIP2);
+                    //IPEndPoint anyIP2 = new IPEndPoint(IPAddress.Any, 0);
+                    //byte[] data = client2.Receive(ref anyIP2);
 
                 }
                 catch (IOException e)
                 {
-
+					Console.WriteLine(e.ToString());
+					System.Diagnostics.Debug.WriteLine(e);
                 }
 
             }
@@ -341,7 +342,7 @@ namespace LOTROServer
             // first server
             prg.client = new UdpClient(9000);
 
-            UdpClient sender = new UdpClient();
+            //UdpClient sender = new UdpClient();
 
             prg.client.DontFragment = true;
 

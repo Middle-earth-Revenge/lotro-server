@@ -84,8 +84,8 @@ namespace LOTROendecryptClient
 
             }
 
-            int v1 = jumpTable[16123, 0];
-            int v2 = jumpTable[16123, 0];
+            //int v1 = jumpTable[16123, 0];
+            //int v2 = jumpTable[16123, 0];
 
             return jumpTable;
         }

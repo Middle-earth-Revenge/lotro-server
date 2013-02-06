@@ -5,7 +5,7 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Collections;
 
-namespace LOTROS2012.Helper
+namespace LOTRO
 {
 
     class HelperMethods

@@ -14,7 +14,7 @@ namespace LOTROendecrypt
         private List<byte[][]> lookUpList; // List with look-ups 4 columns (cipher, length for encoding, encoded as bitarray, "end value")
         private byte[][] quickLookUp;
         private readonly byte[] clear = { 0x0, 0x0, 0x0, 0x0 }; // not final
-        private readonly string fileNameTableJumpRaw = "data\\table_jump_raw";
+        //private readonly string fileNameTableJumpRaw = "data\\table_jump_raw";
         private readonly string fileNameTableJump = "data\\table_jump";
         private readonly string fileNameTableLookUpRaw = "data\\table_lookup_raw";
         private readonly string fileNameTableLookUp = "data\\table_lookup";
@@ -85,8 +85,8 @@ namespace LOTROendecrypt
 
             }
 
-            int v1 = jumpTable[16123, 0];
-            int v2 = jumpTable[16123, 0];
+            //int v1 = jumpTable[16123, 0];
+            //int v2 = jumpTable[16123, 0];
 
             return jumpTable;
         }

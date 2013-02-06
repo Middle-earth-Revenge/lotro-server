@@ -22,8 +22,8 @@ namespace LOTROServer
         private List<byte[][]> lookUpList; // List with look-ups 4 columns (cipher, length for encoding, encoded as bitarray, "end value")
         private readonly string fileNameTableLookUp = "data\\table_lookup_client";
         private byte[][] quickLookUp;
-        private readonly string fileNameTableJumpRaw = "data\\table_jump_client_raw";
-        private readonly string fileNameTableLookUpRaw = "data\\table_lookup_client_raw";
+        //private readonly string fileNameTableJumpRaw = "data\\table_jump_client_raw";
+        //private readonly string fileNameTableLookUpRaw = "data\\table_lookup_client_raw";
 
         private static HelperMethods instance;
 
@@ -223,8 +223,8 @@ namespace LOTROServer
 
             }
 
-            int v1 = jumpTable[16123, 0];
-            int v2 = jumpTable[16123, 0];
+            //int v1 = jumpTable[16123, 0];
+            //int v2 = jumpTable[16123, 0];
 
             return jumpTable;
         }

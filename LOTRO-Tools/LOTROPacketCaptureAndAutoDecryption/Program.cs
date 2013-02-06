@@ -7,6 +7,7 @@ using PacketDotNet;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
+using LOTRO;
 
 namespace LOTROPacketCaptureAndAutoDecryption
 {
@@ -26,16 +27,16 @@ namespace LOTROPacketCaptureAndAutoDecryption
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
 
             var udpPacket = UdpPacket.GetEncapsulated(packet);
-            if (udpPacket != null)
+			if (udpPacket != null)
             {
-                DateTime time = e.Packet.Timeval.Date;
-                int len = e.Packet.Data.Length;
+                //DateTime time = e.Packet.Timeval.Date;
+                //int len = e.Packet.Data.Length;
 
                 var ipPacket = (PacketDotNet.IpPacket)udpPacket.ParentPacket;
                 System.Net.IPAddress srcIp = ipPacket.SourceAddress;
-                System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
-                int srcPort = udpPacket.SourcePort;
-                int dstPort = udpPacket.DestinationPort;
+                //System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
+                //int srcPort = udpPacket.SourcePort;
+                //int dstPort = udpPacket.DestinationPort;
 
                 byte[] data = udpPacket.PayloadData;
 
