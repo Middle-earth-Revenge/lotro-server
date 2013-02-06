@@ -6,10 +6,10 @@
  * The lotro client uses look up tables for decryption as well. They maybe change with newer versions of the client. But, they can easily extracted from hex dump
  * when the client is running. They don't exist in the .exe while not running! Maybe the client loads the values from the zipped files?
  * 
-*/
+ */
 
 
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -84,7 +84,7 @@ namespace LOTROS2012.Helper
                 Buffer.BlockCopy(packet, (int)lengthPacket - lastBlockLength +2, lastBlock, 0, lastBlockLength);
                 byte[] decryptedBlock = processBlock(lastBlock, isClientPacket);
                 Buffer.BlockCopy(decryptedBlock, 0, tempResult, pos, decryptedBlock.Length);
-                pos += decryptedBlock.Length;              
+                pos += decryptedBlock.Length;
             }
 
             decryptedPacket = new byte[pos];

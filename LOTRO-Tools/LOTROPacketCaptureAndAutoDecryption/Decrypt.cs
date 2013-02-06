@@ -1,6 +1,16 @@
+﻿/*
+ * Short explaination how this class works:
+ * 
+ * Call 'generateDecryptedPacket(your raw packet in byte[], true if it'S a client packet; false if it's a server packet);'. Returns the decrypted packet.
+ * A raw client or server packet is only the "data part" of the udp packet, not the whole packet with checksum, port and ip adress,...
+ * The lotro client uses look up tables for decryption as well. They maybe change with newer versions of the client. But, they can easily extracted from hex dump
+ * when the client is running. They don't exist in the .exe while not running! Maybe the client loads the values from the zipped files?
+ * 
+ */
+
+
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
 using System.Collections;
@@ -27,6 +37,9 @@ namespace LOTROPacketCaptureAndAutoDecryption
             this.lookUpListServer = HelperMethods.Instance.getLookUpListServer();
         }
 
+        // decrypts both, server- and client packets
+        // true for a client packet
+        // false for a server packet
         public byte[] generateDecryptedPacket(byte[] packet, bool isClientPacket)
         {
 
@@ -68,14 +81,10 @@ namespace LOTROPacketCaptureAndAutoDecryption
             // Decrypt last block
             if (lastBlockLength > 0)
             {
-
-                //fs.Read(lastBlock, 0, lastBlockLength);
                 Buffer.BlockCopy(packet, (int)lengthPacket - lastBlockLength +2, lastBlock, 0, lastBlockLength);
                 byte[] decryptedBlock = processBlock(lastBlock, isClientPacket);
                 Buffer.BlockCopy(decryptedBlock, 0, tempResult, pos, decryptedBlock.Length);
                 pos += decryptedBlock.Length;
-
-                
             }
 
             decryptedPacket = new byte[pos];
