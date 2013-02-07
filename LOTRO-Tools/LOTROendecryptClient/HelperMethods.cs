@@ -22,6 +22,8 @@ namespace LOTROendecryptClient
 		private List<byte[][]> lookUpListClient; // List with look-ups 4 columns (cipher, length for encoding, encoded as bitarray, "end value")
 		private readonly string fileNameTableLookUpClient = "data\\table_lookup_client";
 		private byte[][] quickLookUpClient;
+		private readonly string fileNameTableJumpClientRaw = "data\\table_jump_raw";
+		private readonly string fileNameTableLookUpClientRaw = "data\\table_lookup_raw";
 
 		// the server decrypt part
 		private int[,] jumpTableServer; // jump table with 2 columns (for bit 0 and bit 1)
@@ -31,10 +33,6 @@ namespace LOTROendecryptClient
 		private byte[][] quickLookUpServer;
 
 		private readonly byte[] clear = { 0x0, 0x0, 0x0, 0x0 }; // for not final check
-		private readonly string fileNameTableJumpRaw = "data\\table_jump_raw";
-		private readonly string fileNameTableJump = "data\\table_jump";
-		private readonly string fileNameTableLookUpRaw = "data\\table_lookup_raw";
-		private readonly string fileNameTableLookUp = "data\\table_lookup";
 
 		private int[] checksums;
 		private readonly string fileNameChecksumArray = "data\\checksums";
@@ -68,11 +66,11 @@ namespace LOTROendecryptClient
 			fsInput.Close();
 
 			// for client packets
-			this.jumpTableClient = generateJumpTableFileFromRaw(fileNameTableJumpRaw, fileNameTableJump); // only when jump table is not there and needs to gain from lotro.exe hex dump
-			//this.jumpTable = generateJumpTable(fileNameTableJump);
-			quickLookUpClient = new byte[16372][]; // there are 16372 values
-			this.lookUpListClient = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUp); // only when look-up table is not there and needs to gain from lotro.exe hex dump
-			//this.lookUpList = generateLookUpTableFile(fileNameTableLookUp);
+			this.jumpTableClient = generateJumpTableFileFromRaw(fileNameTableJumpClientRaw, fileNameTableJumpClient); // only when jump table is not there and needs to gain from lotro.exe hex dump
+			//this.jumpTableClient = generateJumpTableClient(fileNameTableJumpClient);
+			this.quickLookUpClient = new byte[16372][]; // there are 16372 values
+			this.lookUpListClient = generateLookUpTableFileFromRaw(fileNameTableLookUpClientRaw, fileNameTableLookUpClient); // only when look-up table is not there and needs to gain from lotro.exe hex dump
+			//this.lookUpListClient = generateLookUpTableClient(fileNameTableLookUpClient);
 
 			// for server packets
 
@@ -117,7 +115,7 @@ namespace LOTROendecryptClient
 			return this.quickLookUpClient;
 		}
 
-		private int[,] generateJumpTable(string fileInputName)
+		private int[,] generateJumpTableClient(string fileInputName)
 		{
 			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
 
@@ -209,7 +207,7 @@ namespace LOTROendecryptClient
 			return jumpTable;
 		}
 
-		private List<byte[][]> generateLookUpTableFile(string fileInputName)
+		private List<byte[][]> generateLookUpTableClient(string fileInputName)
 		{
 			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
 

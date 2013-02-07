@@ -64,8 +64,10 @@ namespace LOTRO
 			fsInput.Close();
 
 			// for client packets
+			//this.jumpTableClient = generateJumpTableFileFromRaw(fileNameTableJumpRaw, fileNameTableJump); // only when jump table is not there and needs to gain from lotro.exe hex dump
 			this.jumpTableClient = generateJumpTableClient(fileNameTableJumpClient);
-			this.quickLookUpClient = new byte[16372][]; // there are 16371 values
+			this.quickLookUpClient = new byte[16372][]; // there are 16372 values
+			//this.lookUpListClient = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUp); // only when look-up table is not there and needs to gain from lotro.exe hex dump
 			this.lookUpListClient = generateLookUpTableClient(fileNameTableLookUpClient);
 
 			// for server packets
