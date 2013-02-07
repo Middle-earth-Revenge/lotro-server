@@ -22,8 +22,8 @@ namespace LOTROendecrypt
 		private List<byte[][]> lookUpListClient; // List with look-ups 4 columns (cipher, length for encoding, encoded as bitarray, "end value")
 		private readonly string fileNameTableLookUpClient = "data\\table_lookup_client";
 		private byte[][] quickLookUpClient;
-		private readonly string fileNameTableJumpClientRaw = "data\\table_jump_raw";
-		private readonly string fileNameTableLookUpClientRaw = "data\\table_lookup_raw";
+		private readonly string fileNameTableJumpClientRaw = "data\\table_jump_client_raw";
+		private readonly string fileNameTableLookUpClientRaw = "data\\table_lookup_client_raw";
 
 		// the server decrypt part
 		private int[,] jumpTableServer; // jump table with 2 columns (for bit 0 and bit 1)
@@ -31,8 +31,8 @@ namespace LOTROendecrypt
 		private List<byte[][]> lookUpListServer; // List with look-ups 4 columns (cipher, length for encoding, encoded as bitarray, "end value")
 		private readonly string fileNameTableLookUpServer = "data\\table_lookup_server";
 		private byte[][] quickLookUpServer;
-		private readonly string fileNameTableJumpRaw = "data\\table_jump_raw";
-		private readonly string fileNameTableLookUpRaw = "data\\table_lookup_raw";
+		private readonly string fileNameTableJumpRaw = "data\\table_jump_server_raw";
+		private readonly string fileNameTableLookUpRaw = "data\\table_lookup_server_raw";
 
 		private readonly byte[] clear = { 0x0, 0x0, 0x0, 0x0 }; // for not final check
 

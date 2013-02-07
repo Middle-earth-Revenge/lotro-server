@@ -43,5 +43,12 @@
     <None Include="data\table_jump_server" />
     <None Include="data\table_lookup_client" />
     <None Include="data\table_lookup_server" />
+    <None Include="data\checksums" />
+    <None Include="data\private" />
+    <None Include="data\public" />
+    <None Include="data\table_jump_client_raw" />
+    <None Include="data\table_jump_server_raw" />
+    <None Include="data\table_lookup_client_raw" />
+    <None Include="data\table_lookup_server_raw" />
   </ItemGroup>
 </Project>

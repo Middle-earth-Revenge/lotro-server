@@ -70,16 +70,6 @@
     <Folder Include="packets_out\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\table_jump_server" />
-    <None Include="data\table_lookup_server" />
-    <None Include="data\table_lookup_raw">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\table_jump_raw">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 und x64%29</ProductName>

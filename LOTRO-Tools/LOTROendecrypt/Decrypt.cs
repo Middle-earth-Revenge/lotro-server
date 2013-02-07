@@ -31,6 +31,8 @@ namespace LOTROendecrypt
 
 		public Decrypt()
 		{
+			this.jumpTableClient = HelperMethods.Instance.getJumpTableClient();
+			this.lookUpListClient = HelperMethods.Instance.getLookUpListClient();
 			this.jumpTableServer = HelperMethods.Instance.getJumpTableServer();
 			this.lookUpListServer = HelperMethods.Instance.getLookUpListServer();
 		}

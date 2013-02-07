@@ -48,16 +48,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\table_jump_raw">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\table_lookup_raw">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\table_jump_client" />
-    <None Include="data\table_lookup_client" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="packets\" />
     <Folder Include="packets_out\" />
   </ItemGroup>
