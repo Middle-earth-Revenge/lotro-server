@@ -71,11 +71,32 @@ namespace LOTRO
 			// for server packets
 			this.jumpTableServer = generateJumpTableServer(fileNameTableJumpServer);
 			this.quickLookUpServer = new byte[16125][]; // there are 16125 values
-			this.lookUpListServer = generateLookUpTableServer(fileNameTableLookUpServer); 
+			this.lookUpListServer = generateLookUpTableServer(fileNameTableLookUpServer);
 
 			// for checksums, not complete til now
 			this.checksums = generateChecksumArray(fileNameChecksumArray);
+		}
 
+		// reads out the checksum values from file
+		private int[] generateChecksumArray(string fileInputName)
+		{
+			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
+
+			int[] tempArray = new int[fsRead.Length / 4 + 1];
+			byte[] entry = new byte[4];
+
+			int counter = 0;
+
+			while (fsRead.Read(entry,0,4) != 0)
+			{
+				Buffer.BlockCopy(entry, 0, tempArray, counter*4, 4);
+
+				counter++;
+			}
+
+
+
+			return tempArray;
 		}
 
 		public int[,] getJumpTableClient()
@@ -160,28 +181,6 @@ namespace LOTRO
 
 
 			return tempLookUpList;
-		}
-
-		// reads out the checksum values from file
-		private int[] generateChecksumArray(string fileInputName)
-		{
-			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
-
-			int[] tempArray = new int[fsRead.Length / 4 + 1];
-			byte[] entry = new byte[4];
-
-			int counter = 0;
-
-			while (fsRead.Read(entry,0,4) != 0)
-			{
-				Buffer.BlockCopy(entry, 0, tempArray, counter*4, 4);             
-
-				counter++;
-			}
-
-
-
-			return tempArray;
 		}
 
 		public int[,] getJumpTableServer()
@@ -445,12 +444,12 @@ namespace LOTRO
 
 		public bool checkForEndValue(int index, bool isClient)
 		{
-			List<byte[][]> lookUpList = null;
+			List<byte[][]> lookUpList;
 
-			if (!isClient)
-				lookUpList = lookUpListServer;
-			else
+			if (isClient)
 				lookUpList = lookUpListClient;
+			else
+				lookUpList = lookUpListServer;
 
 
 			bool containsNoEndValue = false;

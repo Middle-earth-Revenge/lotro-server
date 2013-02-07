@@ -2,12 +2,19 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Security.Cryptography;
+using System.Collections;
 
 namespace LOTROendecryptClient
 {
 
 	class HelperMethods
 	{
+
+		private RSACryptoServiceProvider rsaCryptoServiceProvider;
+		private readonly string privateKeyFile = "data\\private";
+		private byte[] cspBlob;
+		private byte[] sessionKey;
 
 		// the client decrypt part
 		private int[,] jumpTableClient; // jump table with 2 columns (for bit 0 and bit 1)
@@ -48,13 +55,51 @@ namespace LOTROendecryptClient
 
 		private HelperMethods()
 		{
+			rsaCryptoServiceProvider = new RSACryptoServiceProvider();
+
+			FileStream fsInput = new FileStream(@privateKeyFile, FileMode.Open);
+
+			cspBlob = new byte[fsInput.Length];
+
+			fsInput.Read(cspBlob, 0, cspBlob.Length);
+
+			rsaCryptoServiceProvider.ImportCspBlob(cspBlob);
+
+			fsInput.Close();
+
 			// for client packets
 			this.jumpTableClient = generateJumpTableFileFromRaw(fileNameTableJumpRaw, fileNameTableJump); // only when jump table is not there and needs to gain from lotro.exe hex dump
 			//this.jumpTable = generateJumpTable(fileNameTableJump);
-
 			quickLookUpClient = new byte[16372][]; // there are 16372 values
 			this.lookUpListClient = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUp); // only when look-up table is not there and needs to gain from lotro.exe hex dump
 			//this.lookUpList = generateLookUpTableFile(fileNameTableLookUp);
+
+			// for server packets
+
+			// for checksums, not complete til now
+			this.checksums = generateChecksumArray(fileNameChecksumArray);
+		}
+
+		// reads out the checksum values from file
+		private int[] generateChecksumArray(string fileInputName)
+		{
+			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
+
+			int[] tempArray = new int[fsRead.Length / 4 + 1];
+			byte[] entry = new byte[4];
+
+			int counter = 0;
+
+			while (fsRead.Read(entry,0,4) != 0)
+			{
+				Buffer.BlockCopy(entry, 0, tempArray, counter*4, 4);
+
+				counter++;
+			}
+
+
+
+			return tempArray;
 		}
 
 		public int[,] getJumpTableClient()
@@ -218,7 +263,7 @@ namespace LOTROendecryptClient
 			byte[][] entry;
 
 			byte[] cipher;// = new byte[4];
-			byte[] encodingLength; 
+			byte[] encodingLength;
 			byte[] encryptArray;
 			byte[] endValue;
 
@@ -269,43 +314,8 @@ namespace LOTROendecryptClient
 			return tempLookUpList;
 		}
 
-		public int getIndexFromByte(byte[][] src, byte[] value)
-		{
-			int index = 0;
-
-			foreach (byte[] b in src)
-			{
-				if (ArraysEqual(b, value))
-					break;
-				index++;
-			}
-
-			if (index == src.Length)
-				index = -1;
-
-			// shouldn't happen
-			if (index == -1)
-			{
-				Console.Write("Key not found. This shouldn't happen.");
-				//System.Environment.Exit(0);
-			}
-
-			return index;
-		}
-
-		public bool checkForEndValue(int index)
-		{
-			bool containsNoEndValue = false;
-
-			byte[][] temp = lookUpListClient[index];
-
-			containsNoEndValue = ArraysEqual(temp[3], clear);
-
-			return containsNoEndValue;
-		}
-
 		// needs to be replaced, taken from the net
-		private bool ArraysEqual(byte[] b1, byte[] b2)
+		public bool ArraysEqual(byte[] b1, byte[] b2)
 		{
 			unsafe
 			{
@@ -328,6 +338,48 @@ namespace LOTROendecryptClient
 
 				return true;
 			}
+		}
+
+		public int getIndexFromByte(byte[][] src, byte[] value)
+		{
+			int index = 0;
+
+			foreach (byte[] b in src)
+			{
+				if (ArraysEqual(b, value))
+					break;
+				index++;
+			}
+
+			if (index == src.Length)
+				index = -1;
+
+			// could happen some times
+			if (index == -1)
+			{
+				Console.Write("Key not found. This doesn't matter, because the algo will take the next possible or the last, if array > than 4 bytes. org. client does the same");
+			}
+
+			return index;
+		}
+
+		public bool checkForEndValue(int index, bool isClient)
+		{
+			List<byte[][]> lookUpList;
+
+			if (isClient)
+				lookUpList = lookUpListClient;
+			else
+				lookUpList = lookUpListServer;
+
+
+			bool containsNoEndValue = false;
+
+			byte[][] temp = lookUpList[index];
+
+			containsNoEndValue = ArraysEqual(temp[3], clear);
+
+			return containsNoEndValue;
 		}
 
 	}
