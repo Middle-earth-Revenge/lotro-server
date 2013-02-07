@@ -11,21 +11,19 @@ namespace LOTROendecryptClient
 	class Decrypt
 	{
 
-		private FileStream fs;
-		private int[,] jumpTable;
-		private List<byte[][]> lookUpList;
+		private int[,] jumpTableClient;
+		private List<byte[][]> lookUpListClient;
 		private int startPosition;
-		private int lastIndex = 0; // last index has to be keept til new value is found
+		private int lastIndex; // last index has to be keept til new value is found
 
 
-		public Decrypt(FileStream fs)
+		public Decrypt()
 		{
-			this.fs = fs;
-			this.jumpTable = HelperMethods.Instance.getJumpTable();
-			this.lookUpList = HelperMethods.Instance.getLookUpList();
+			this.jumpTableClient = HelperMethods.Instance.getJumpTable();
+			this.lookUpListClient = HelperMethods.Instance.getLookUpList();
 		}
 
-		public byte[] generateDecryptedPacket()
+		public byte[] generateDecryptedPacket(FileStream fs)
 		{
 			// Shouldn't happen
 			if (fs == null)
@@ -34,6 +32,7 @@ namespace LOTROendecryptClient
 			byte[] tempResult = new byte[fs.Length * 4];
 			int pos = 0;
 			startPosition = 4; // the first 4 Bits in the first block are skiped
+			lastIndex = 0;
 
 			// Returns the final decrypted packet
 			byte[] decryptedPacket = null;
@@ -112,15 +111,15 @@ namespace LOTROendecryptClient
 			{
 				int column = bitArray.Get(i) ? 1 : 0;
 
-				if (jumpTable[lastIndex, column] >= 0)
+				if (jumpTableClient[lastIndex, column] >= 0)
 				{
-					lastIndex = jumpTable[lastIndex, column];
+					lastIndex = jumpTableClient[lastIndex, column];
 				}
 				else
 				{
-					index = jumpTable[lastIndex, column] + 16372;
+					index = jumpTableClient[lastIndex, column] + 16372;
 
-					byte[][] lookUpEntry = lookUpList[index];
+					byte[][] lookUpEntry = lookUpListClient[index];
 					byte[] lookUpValue = lookUpEntry[0];
 
 					Buffer.BlockCopy(lookUpValue, 0, tempResult, pos, lookUpValue.Length);
