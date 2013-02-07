@@ -22,13 +22,9 @@ namespace LOTROendecrypt
 			this.lookUpListServer = HelperMethods.Instance.getLookUpListServer();
 		}
 
-		public byte[] generateDecryptedPacket(FileStream fs)
+		public byte[] generateDecryptedPacket(byte[] packet)
 		{
-			// Shouldn't happen
-			if (fs == null)
-				return null;
-
-			byte[] tempResult = new byte[fs.Length * 4];
+			byte[] tempResult = new byte[packet.Length * 4];
 			int pos = 0;
 			startPosition = 4; // the first 4 Bits in the first block are skiped
 			lastIndex = 0;
@@ -37,8 +33,8 @@ namespace LOTROendecrypt
 			byte[] decryptedPacket = null;
 
 			// First 2 Bytes are the same in the decrypted packet
-			byte firstByte = (byte) fs.ReadByte();
-			byte secondByte = (byte) fs.ReadByte();
+			byte firstByte = packet[0];
+			byte secondByte = packet[1];
 
 			// Write them to temp array
 			tempResult[0] = firstByte;
@@ -46,7 +42,7 @@ namespace LOTROendecrypt
 			pos = 2;
 
 			// Decrypt blocks of 4 Byte
-			long lengthPacket = fs.Length - 2; // first 2 Bytes already read and have nothing to do with the decrypted packet
+			long lengthPacket = packet.Length - 2; // first 2 Bytes already read and have nothing to do with the decrypted packet
 			int numberOfBlocks = (int)lengthPacket / 4;
 			int lastBlockLength = (int)lengthPacket % 4;
 
@@ -55,7 +51,7 @@ namespace LOTROendecrypt
 
 			for (int i = 0; i < numberOfBlocks; i++)
 			{
-				fs.Read(block, 0, 4);
+				Buffer.BlockCopy(packet, (i*4) + 2, block, 0, 4);
 				byte[] decryptedBlock = processBlock(block);
 				Buffer.BlockCopy(decryptedBlock, 0, tempResult, pos, decryptedBlock.Length);
 				pos += decryptedBlock.Length;
@@ -66,8 +62,7 @@ namespace LOTROendecrypt
 			// Decrypt last block
 			if (lastBlockLength > 0)
 			{
-
-				fs.Read(lastBlock, 0, lastBlockLength);
+				Buffer.BlockCopy(packet, (int)lengthPacket - lastBlockLength +2, lastBlock, 0, lastBlockLength);
 				byte[] decryptedBlock = processBlock(lastBlock);
 				Buffer.BlockCopy(decryptedBlock, 0, tempResult, pos, decryptedBlock.Length);
 				pos += decryptedBlock.Length;

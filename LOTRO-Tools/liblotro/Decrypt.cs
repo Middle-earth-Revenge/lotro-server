@@ -42,7 +42,6 @@ namespace LOTRO
 		// false for a server packet
 		public byte[] generateDecryptedPacket(byte[] packet, bool isClientPacket)
 		{
-
 			byte[] tempResult = new byte[packet.Length * 4];
 			int pos = 0;
 			startPosition = 4; // the first 4 Bits in the first block are skiped
