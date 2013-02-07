@@ -1,4 +1,15 @@
-using System;
+/*
+ * Short explaination how this class works:
+ * 
+ * Call 'generateDecryptedPacket(your raw packet in byte[], true if it'S a client packet; false if it's a server packet);'. Returns the decrypted packet.
+ * A raw client or server packet is only the "data part" of the udp packet, not the whole packet with checksum, port and ip adress,...
+ * The lotro client uses look up tables for decryption as well. They maybe change with newer versions of the client. But, they can easily extracted from hex dump
+ * when the client is running. They don't exist in the .exe while not running! Maybe the client loads the values from the zipped files?
+ * 
+ */
+
+
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
@@ -12,6 +23,8 @@ namespace LOTROendecryptClient
 
 		private int[,] jumpTableClient;
 		private List<byte[][]> lookUpListClient;
+		private int[,] jumpTableServer;
+		private List<byte[][]> lookUpListServer;
 		private int startPosition;
 		private int lastIndex; // last index has to be keept til new value is found
 
@@ -22,7 +35,10 @@ namespace LOTROendecryptClient
 			this.lookUpListClient = HelperMethods.Instance.getLookUpListClient();
 		}
 
-		public byte[] generateDecryptedPacket(byte[] packet)
+		// decrypts both, server- and client packets
+		// true for a client packet
+		// false for a server packet
+		public byte[] generateDecryptedPacket(byte[] packet, bool isClientPacket)
 		{
 			byte[] tempResult = new byte[packet.Length * 4];
 			int pos = 0;
@@ -52,7 +68,7 @@ namespace LOTROendecryptClient
 			for (int i = 0; i < numberOfBlocks; i++)
 			{
 				Buffer.BlockCopy(packet, (i*4) + 2, block, 0, 4);
-				byte[] decryptedBlock = processBlock(block);
+				byte[] decryptedBlock = processBlock(block, isClientPacket);
 				Buffer.BlockCopy(decryptedBlock, 0, tempResult, pos, decryptedBlock.Length);
 				pos += decryptedBlock.Length;
 				startPosition = 0;
@@ -63,7 +79,7 @@ namespace LOTROendecryptClient
 			if (lastBlockLength > 0)
 			{
 				Buffer.BlockCopy(packet, (int)lengthPacket - lastBlockLength +2, lastBlock, 0, lastBlockLength);
-				byte[] decryptedBlock = processBlock(lastBlock);
+				byte[] decryptedBlock = processBlock(lastBlock, isClientPacket);
 				Buffer.BlockCopy(decryptedBlock, 0, tempResult, pos, decryptedBlock.Length);
 				pos += decryptedBlock.Length;
 			}
@@ -90,9 +106,29 @@ namespace LOTROendecryptClient
          * 5. Get the value which is given in the second look-up-table
          * 6. Start with 4 again til there are no bits left in the array
          */
-		private byte[] processBlock(byte[] block)
+		private byte[] processBlock(byte[] block, bool client)
 		{
-			byte[] tempResult = new byte[block.Length * 16];
+			int[,] jumpTable;
+			List<byte[][]> lookUpList;
+			int offset;
+			int multiplier;
+
+			if (client)
+			{
+				jumpTable = this.jumpTableClient;
+				lookUpList = this.lookUpListClient;
+				offset = 16372;
+				multiplier = 16;
+			}
+			else
+			{
+				jumpTable = this.jumpTableServer;
+				lookUpList = this.lookUpListServer;
+				offset = 16125;
+				multiplier = 6;
+			}
+
+			byte[] tempResult = new byte[block.Length * multiplier];
 			int pos = 0;
 
 			//Array.Reverse(block); BitArray is reversing bytes default
@@ -105,18 +141,26 @@ namespace LOTROendecryptClient
 			{
 				int column = bitArray.Get(i) ? 1 : 0;
 
-				if (jumpTableClient[lastIndex, column] >= 0)
+				if (jumpTable[lastIndex, column] >= 0)
 				{
-					lastIndex = jumpTableClient[lastIndex, column];
+					lastIndex = jumpTable[lastIndex, column];
 				}
 				else
 				{
-					index = jumpTableClient[lastIndex, column] + 16372;
+					index = jumpTable[lastIndex, column] + offset;
 
-					byte[][] lookUpEntry = lookUpListClient[index];
+					byte[][] lookUpEntry = lookUpList[index];
 					byte[] lookUpValue = lookUpEntry[0];
 
-					Buffer.BlockCopy(lookUpValue, 0, tempResult, pos, lookUpValue.Length);
+					try
+					{
+						Buffer.BlockCopy(lookUpValue, 0, tempResult, pos, lookUpValue.Length);
+					}
+					catch (Exception e)
+					{
+
+						System.Diagnostics.Debug.WriteLine(e);
+					}
 
 					pos += lookUpValue.Length;
 

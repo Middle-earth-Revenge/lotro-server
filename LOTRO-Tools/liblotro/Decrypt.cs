@@ -110,26 +110,27 @@ namespace LOTRO
          */
 		private byte[] processBlock(byte[] block, bool client)
 		{
-			int[,] jumpTable = null;
-			List<byte[][]> lookUpList = null;
-			int offset = 16125;
+			int[,] jumpTable;
+			List<byte[][]> lookUpList;
+			int offset;
+			int multiplier;
 
 			if (client)
 			{
 				jumpTable = this.jumpTableClient;
 				lookUpList = this.lookUpListClient;
 				offset = 16372;
-
+				multiplier = 16;
 			}
 			else
 			{
 				jumpTable = this.jumpTableServer;
 				lookUpList = this.lookUpListServer;
 				offset = 16125;
+				multiplier = 6;
 			}
 
-
-			byte[] tempResult = new byte[block.Length * 16];
+			byte[] tempResult = new byte[block.Length * multiplier];
 			int pos = 0;
 
 			//Array.Reverse(block); BitArray is reversing bytes default

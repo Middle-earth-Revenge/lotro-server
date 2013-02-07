@@ -59,7 +59,7 @@ namespace LOTROendecrypt
 				if (prg.fsInput.Read(packet, 0, packet.Length) != packet.Length) {
 					throw new Exception();
 				}
-				byte[] decryptedPacket = prg.packetDecrypt.generateDecryptedPacket(packet);
+				byte[] decryptedPacket = prg.packetDecrypt.generateDecryptedPacket(packet, false);
 				prg.fsOutput.Write(decryptedPacket, 0, decryptedPacket.Length);
 				break;
 			case true:
