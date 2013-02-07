@@ -22,6 +22,8 @@ namespace LOTRO
 		private List<byte[][]> lookUpListClient; // List with look-ups 4 columns (cipher, length for encoding, encoded as bitarray, "end value")
 		private readonly string fileNameTableLookUpClient = "data\\table_lookup_client";
 		private byte[][] quickLookUpClient;
+		private readonly string fileNameTableJumpClientRaw = "data\\table_jump_raw";
+		private readonly string fileNameTableLookUpClientRaw = "data\\table_lookup_raw";
 
 		// the server decrypt part
 		private int[,] jumpTableServer; // jump table with 2 columns (for bit 0 and bit 1)
@@ -29,6 +31,8 @@ namespace LOTRO
 		private List<byte[][]> lookUpListServer; // List with look-ups 4 columns (cipher, length for encoding, encoded as bitarray, "end value")
 		private readonly string fileNameTableLookUpServer = "data\\table_lookup_server";
 		private byte[][] quickLookUpServer;
+		private readonly string fileNameTableJumpRaw = "data\\table_jump_raw";
+		private readonly string fileNameTableLookUpRaw = "data\\table_lookup_raw";
 
 		private readonly byte[] clear = { 0x0, 0x0, 0x0, 0x0 }; // for not final check
 
@@ -65,14 +69,16 @@ namespace LOTRO
 
 			// for client packets
 			//this.jumpTableClient = generateJumpTableFileFromRaw(fileNameTableJumpRaw, fileNameTableJump); // only when jump table is not there and needs to gain from lotro.exe hex dump
-			this.jumpTableClient = generateJumpTableClient(fileNameTableJumpClient);
+			this.jumpTableClient = generateJumpTable(fileNameTableJumpClient);
 			this.quickLookUpClient = new byte[16372][]; // there are 16372 values
-			//this.lookUpListClient = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUp); // only when look-up table is not there and needs to gain from lotro.exe hex dump
+			//this.lookUpListClient = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUp, quickLookUpClient); // only when look-up table is not there and needs to gain from lotro.exe hex dump
 			this.lookUpListClient = generateLookUpTableClient(fileNameTableLookUpClient);
 
 			// for server packets
-			this.jumpTableServer = generateJumpTableServer(fileNameTableJumpServer);
+			//this.jumpTable = generateJumpTableFileFromRaw(fileNameTableJumpRaw, fileNameTableJump); // only when jump table is not there and needs to gain from lotro.exe hex dump
+			this.jumpTableServer = generateJumpTable(fileNameTableJumpServer);
 			this.quickLookUpServer = new byte[16125][]; // there are 16125 values
+			//this.lookUpListServer = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUpServer, quickLookUpServer); // only when look-up table is not there and needs to gain from lotro.exe hex dump
 			this.lookUpListServer = generateLookUpTableServer(fileNameTableLookUpServer);
 
 			// for checksums, not complete til now
@@ -111,7 +117,12 @@ namespace LOTRO
 			return this.lookUpListClient;
 		}
 
-		private int[,] generateJumpTableClient(string fileInputName)
+		public byte[][] getQuickLookUpListArrayClient()
+		{
+			return this.quickLookUpClient;
+		}
+
+		private int[,] generateJumpTable(string fileInputName)
 		{
 			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
 
@@ -136,6 +147,68 @@ namespace LOTRO
 
 			//int v1 = jumpTable[16123, 0];
 			//int v2 = jumpTable[16123, 0];
+
+			return jumpTable;
+		}
+
+		private int[,] generateJumpTableFileFromRaw(string fileInputName, string fileOutputName)
+		{
+			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
+
+			int[,] jumpTable = new Int32[fsRead.Length / 16, 2];
+
+			byte[] adress0 = new byte[4];
+			byte[] adress1 = new byte[4];
+
+			FileStream fsWrite = new FileStream(@fileOutputName, FileMode.Create);
+
+			bool firstValueRead = false;
+			int startAdressMemory = 0;
+
+			for (int i = 0; i < jumpTable.Length / 2; i++)
+			{
+
+				fsRead.ReadByte();
+				fsRead.ReadByte();
+				fsRead.ReadByte();
+				fsRead.ReadByte();
+
+				fsRead.Read(adress0, 0, 4);
+				fsRead.Read(adress1, 0, 4);
+
+				fsRead.ReadByte();
+				fsRead.ReadByte();
+				fsRead.ReadByte();
+				fsRead.ReadByte();
+
+				if (!firstValueRead)
+				{
+					startAdressMemory = (BitConverter.ToInt32(adress0, 0) - 16);
+
+					firstValueRead = true;
+
+				}
+
+				int value0 = (BitConverter.ToInt32(adress0, 0) - startAdressMemory) / 16;
+				int value1 = (BitConverter.ToInt32(adress1, 0) - startAdressMemory) / 16;
+
+				jumpTable[i, 0] = value0;
+				jumpTable[i, 1] = value1;
+
+				// for saving it to a file
+				byte[] first = BitConverter.GetBytes(value0);
+				byte[] second = BitConverter.GetBytes(value1);
+
+
+				fsWrite.Write(first, 0, first.Length);
+				fsWrite.Write(second, 0, second.Length);
+
+
+			}
+
+
+			fsWrite.Close();
+			fsRead.Close();
 
 			return jumpTable;
 		}
@@ -200,35 +273,6 @@ namespace LOTRO
 			return this.quickLookUpServer;
 		}
 
-		private int[,] generateJumpTableServer(string fileInputName)
-		{
-			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
-
-			int[,] jumpTable = new Int32[fsRead.Length / 8, 2];
-
-			byte[] adress0 = new byte[4];
-			byte[] adress1 = new byte[4];
-
-			for (int i = 0; i < fsRead.Length / 8; i++)
-			{
-
-				fsRead.Read(adress0, 0, 4);
-				fsRead.Read(adress1, 0, 4);
-
-				int value0 = BitConverter.ToInt32(adress0, 0);
-				int value1 = BitConverter.ToInt32(adress1, 0);
-
-				jumpTable[i, 0] = value0;
-				jumpTable[i, 1] = value1;
-
-			}
-
-			//int v1 = jumpTable[16123, 0];
-			//int v2 = jumpTable[16123, 0];
-
-			return jumpTable;
-		}
-
 		private List<byte[][]> generateLookUpTableServer(string fileInputName)
 		{
 			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
@@ -270,6 +314,66 @@ namespace LOTRO
 			}
 
 
+
+			return tempLookUpList;
+		}
+
+		private List<byte[][]> generateLookUpTableFileFromRaw(string fileInputName, string fileOutputName, byte[][] quickLookUp)
+		{
+			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open);
+
+			List<byte[][]> tempLookUpList = new List<byte[][]>();
+
+			byte[][] entry;
+
+			byte[] cipher;// = new byte[4];
+			byte[] encodingLength;
+			byte[] encryptArray;
+			byte[] endValue;
+
+			FileStream fsWrite = new FileStream(@fileOutputName, FileMode.Create);
+
+			for (int i = 0; i < fsRead.Length / 16; i++)
+			{
+				encodingLength = new byte[1];
+				encryptArray = new byte[4];
+				endValue = new byte[4];
+
+				fsRead.ReadByte(); // skip
+				int length = fsRead.ReadByte();
+				fsRead.Read(encodingLength,0,1);
+				fsRead.ReadByte(); // skip
+
+				cipher = new byte[length];
+
+				fsRead.Read(cipher, 0, length);
+
+				for (int j = length; j < 4; j++)
+					fsRead.ReadByte(); // skip
+
+				fsRead.Read(endValue, 0, 4);
+				fsRead.Read(encryptArray, 0, 4);
+
+				entry = new byte[4][];
+
+				entry[0] = cipher;
+				entry[1] = encodingLength;
+				entry[2] = encryptArray;
+				entry[3] = endValue;
+
+				tempLookUpList.Add(entry);
+				quickLookUp[i] = cipher;
+
+				fsWrite.WriteByte((byte)length);
+				fsWrite.Write(cipher, 0, cipher.Length);
+				fsWrite.Write(encodingLength,0,1);
+				fsWrite.Write(encryptArray, 0, encryptArray.Length);
+				fsWrite.Write(endValue, 0, endValue.Length);
+
+			}
+
+			fsWrite.Close();
+			fsRead.Close();
 
 			return tempLookUpList;
 		}

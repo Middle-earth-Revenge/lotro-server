@@ -38,4 +38,10 @@
     <Compile Include="HelperMethods.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <None Include="data\table_jump_client" />
+    <None Include="data\table_jump_server" />
+    <None Include="data\table_lookup_client" />
+    <None Include="data\table_lookup_server" />
+  </ItemGroup>
 </Project>

@@ -70,8 +70,8 @@
     <Folder Include="packets_out\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\table_jump" />
-    <None Include="data\table_lookup" />
+    <None Include="data\table_jump_server" />
+    <None Include="data\table_lookup_server" />
     <None Include="data\table_lookup_raw">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
