@@ -10,8 +10,8 @@ namespace LOTROendecrypt
     class HelperMethods
     {
 
-        private int[,] jumpTable; // jump table with 2 columns (for bit 0 and bit 1)
-        private List<byte[][]> lookUpList; // List with look-ups 4 columns (cipher, length for encoding, encoded as bitarray, "end value")
+        private int[,] jumpTableServer; // jump table with 2 columns (for bit 0 and bit 1)
+        private List<byte[][]> lookUpListServer; // List with look-ups 4 columns (cipher, length for encoding, encoded as bitarray, "end value")
         private byte[][] quickLookUp;
         private readonly byte[] clear = { 0x0, 0x0, 0x0, 0x0 }; // not final
         //private readonly string fileNameTableJumpRaw = "data\\table_jump_raw";
@@ -38,23 +38,23 @@ namespace LOTROendecrypt
         {
             // generate jumptable
             //this.jumpTable = generateJumpTableFileFromRaw(fileNameTableJumpRaw, fileNameTableJump); // only when jump table is not there and needs to gain from lotro.exe hex dump
-            this.jumpTable = generateJumpTable(fileNameTableJump);
+            this.jumpTableServer = generateJumpTable(fileNameTableJump);
 
             // generate look-up-table
             //quickLookUp = new byte[16125][]; // there are 16125 values
             quickLookUp = new byte[16125][]; // there are 16125 values
-            this.lookUpList = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUp); // only when look-up table is not there and needs to gain from lotro.exe hex dump
+            this.lookUpListServer = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUp); // only when look-up table is not there and needs to gain from lotro.exe hex dump
             //this.lookUpList = generateLookUpTableFile(fileNameTableLookUp);
         }
 
-        public int[,] getJumpTable()
+        public int[,] getJumpTableServer()
         {
-            return this.jumpTable;
+            return this.jumpTableServer;
         }
 
-        public List<byte[][]> getLookUpList()
+        public List<byte[][]> getLookUpListServer()
         {
-            return this.lookUpList;
+            return this.lookUpListServer;
         }
 
         public byte[][] getQuickLookUpListArray()
@@ -287,7 +287,7 @@ namespace LOTROendecrypt
         {
             bool containsNoEndValue = false;
 
-            byte[][] temp = lookUpList[index];
+            byte[][] temp = lookUpListServer[index];
 
             containsNoEndValue = ArraysEqual(temp[3], clear);
 

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
 using System.Collections;
@@ -19,8 +18,8 @@ namespace LOTROendecrypt
 
 		public Decrypt()
 		{
-			this.jumpTableServer = HelperMethods.Instance.getJumpTable();
-			this.lookUpListServer = HelperMethods.Instance.getLookUpList();
+			this.jumpTableServer = HelperMethods.Instance.getJumpTableServer();
+			this.lookUpListServer = HelperMethods.Instance.getLookUpListServer();
 		}
 
 		public byte[] generateDecryptedPacket(FileStream fs)
