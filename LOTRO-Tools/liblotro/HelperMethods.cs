@@ -68,17 +68,17 @@ namespace LOTRO
 			fsInput.Close();
 
 			// for client packets
-			//this.jumpTableClient = generateJumpTableFileFromRaw(fileNameTableJumpClientRaw, fileNameTableJump); // only when jump table is not there and needs to gain from lotro.exe hex dump
+			this.jumpTableClient = generateJumpTableFileFromRaw(fileNameTableJumpClientRaw, fileNameTableJumpClient); // only when jump table is not there and needs to gain from lotro.exe hex dump
 			this.jumpTableClient = generateJumpTable(fileNameTableJumpClient);
 			this.quickLookUpClient = new byte[16372][]; // there are 16372 values
-			//this.lookUpListClient = generateLookUpTableFileFromRaw(fileNameTableLookUpClientRaw, fileNameTableLookUp, quickLookUpClient); // only when look-up table is not there and needs to gain from lotro.exe hex dump
+			this.lookUpListClient = generateLookUpTableFileFromRaw(fileNameTableLookUpClientRaw, fileNameTableLookUpClient, quickLookUpClient); // only when look-up table is not there and needs to gain from lotro.exe hex dump
 			this.lookUpListClient = generateLookUpTableClient(fileNameTableLookUpClient);
 
 			// for server packets
-			//this.jumpTable = generateJumpTableFileFromRaw(fileNameTableJumpRaw, fileNameTableJump); // only when jump table is not there and needs to gain from lotro.exe hex dump
+			this.jumpTableServer = generateJumpTableFileFromRaw(fileNameTableJumpRaw, fileNameTableJumpServer); // only when jump table is not there and needs to gain from lotro.exe hex dump
 			this.jumpTableServer = generateJumpTable(fileNameTableJumpServer);
 			this.quickLookUpServer = new byte[16125][]; // there are 16125 values
-			//this.lookUpListServer = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUpServer, quickLookUpServer); // only when look-up table is not there and needs to gain from lotro.exe hex dump
+			this.lookUpListServer = generateLookUpTableFileFromRaw(fileNameTableLookUpRaw, fileNameTableLookUpServer, quickLookUpServer); // only when look-up table is not there and needs to gain from lotro.exe hex dump
 			this.lookUpListServer = generateLookUpTableServer(fileNameTableLookUpServer);
 
 			// for checksums, not complete til now
