@@ -16,14 +16,14 @@ using System.Text;
 using System.IO;
 using System.Collections;
 
-namespace LOTROx
+namespace LOTRO
 {
 	class Encrypt
 	{
 		private List<byte[][]> lookUpList;
 		private byte[][] quickLookUpArray;
-		private int startPosition;
-		private int lastIndex = 0; // last index has to be keept til new value is found
+		//private int startPosition;
+		//private int lastIndex = 0; // last index has to be keept til new value is found
 
 		public Encrypt()
 		{
@@ -56,14 +56,14 @@ namespace LOTROx
 			Buffer.BlockCopy(data, 2, tempResult, 0, data.Length - 2);
 
 			bool clear = false;
-			bool lastBlock = false;
+			//bool lastBlock = false;
 
 			int index = 0;
 			byte[] lookUp = null;
 
 			int lastIndex = 0;
 
-			byte[] xxx = new byte[4];
+			//byte[] xxx = new byte[4];
 
 			int countBits = 0;
 
@@ -108,7 +108,7 @@ namespace LOTROx
 						if (i + lookUp.Length == tempResult.Length)
 						{
 							clear = true;
-							lastBlock = true;
+							//lastBlock = true;
 						}
 
 						arrayLength++;
