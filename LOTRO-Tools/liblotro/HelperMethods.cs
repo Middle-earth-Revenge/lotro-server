@@ -8,7 +8,7 @@ using System.Collections;
 namespace LOTRO
 {
 
-	class HelperMethods
+	public class HelperMethods
 	{
 
 		private RSACryptoServiceProvider rsaCryptoServiceProvider;
