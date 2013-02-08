@@ -18,7 +18,7 @@ using System.Collections;
 
 namespace LOTRO
 {
-	class Encrypt
+	public class Encrypt
 	{
 		private List<byte[][]> lookUpList;
 		private byte[][] quickLookUpArray;

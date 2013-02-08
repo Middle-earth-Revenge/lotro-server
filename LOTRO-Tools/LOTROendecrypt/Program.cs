@@ -11,7 +11,7 @@ namespace LOTROendecrypt
 	{
 
 		private Decrypt packetDecrypt;
-		//private Encrypt packetEncrypt;
+		private Encrypt packetEncrypt;
 
 		private FileStream fsInput;
 		private FileStream fsOutput;
@@ -52,21 +52,21 @@ namespace LOTROendecrypt
                 prg.fsInput = new FileStream(fi[i].FullName, FileMode.Open);
                 prg.fsOutput = new FileStream(@"packets_out\\server_" + fi[i].Name, FileMode.Create); */
 
-			switch (prg.encrypting)
+			byte[] packet = new byte[prg.fsInput.Length];
+			if (prg.fsInput.Read(packet, 0, packet.Length) != packet.Length) {
+				throw new Exception();
+			}			switch (prg.encrypting)
 			{
 			case false:
 				prg.packetDecrypt = new Decrypt();
-				byte[] packet = new byte[prg.fsInput.Length];
-				if (prg.fsInput.Read(packet, 0, packet.Length) != packet.Length) {
-					throw new Exception();
-				}
 				byte[] decryptedPacket = prg.packetDecrypt.generateDecryptedPacket(packet, false);
 				prg.fsOutput.Write(decryptedPacket, 0, decryptedPacket.Length);
 				break;
 			case true:
-				//prg.packetEncrypt = new Encrypt(prg.fsInput);
-				//byte[] encryptedPacket = prg.packetEncrypt.generateEncryptedPacket();
-				//prg.fsOutput.Write(encryptedPacket, 0, encryptedPacket.Length);
+				prg.packetEncrypt = new Encrypt();
+
+				byte[] encryptedPacket = prg.packetEncrypt.generateEncryptedPacket(packet, false);
+				prg.fsOutput.Write(encryptedPacket, 0, encryptedPacket.Length);
 				break;
 
 			}
