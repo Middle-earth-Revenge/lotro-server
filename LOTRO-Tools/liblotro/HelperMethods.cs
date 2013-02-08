@@ -16,6 +16,8 @@ namespace LOTRO
 		private byte[] cspBlob;
 		private byte[] sessionKey;
 
+		// Emedding of resources implemented like mentioned in http://support.microsoft.com/kb/319292
+
 		// the client decrypt part
 		private int[,] jumpTableClient; // jump table with 2 columns (for bit 0 and bit 1)
 		private readonly string fileNameTableJumpClient = "data" + Path.DirectorySeparatorChar + "table_jump_client";
