@@ -343,7 +343,7 @@ namespace LOTRO
 
 				fsRead.ReadByte(); // skip
 				int length = fsRead.ReadByte();
-				fsRead.Read(encodingLength,0,1);
+				fsRead.Read(encodingLength, 0, 1);
 				fsRead.ReadByte(); // skip
 
 				cipher = new byte[length];
@@ -368,7 +368,7 @@ namespace LOTRO
 
 				fsWrite.WriteByte((byte)length);
 				fsWrite.Write(cipher, 0, cipher.Length);
-				fsWrite.Write(encodingLength,0,1);
+				fsWrite.Write(encodingLength, 0, 1);
 				fsWrite.Write(encryptArray, 0, encryptArray.Length);
 				fsWrite.Write(endValue, 0, endValue.Length);
 

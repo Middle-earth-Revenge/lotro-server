@@ -7,8 +7,6 @@
  * when the client is running. They don't exist in the .exe while not running! Maybe the client loads the values from the zipped files?
  * 
  */
-
-
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;

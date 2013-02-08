@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.IO;
 using System.Net.Sockets;
 using System.Net;
 using System.Threading;
-
+using LOTRO;
 
 /* Start the lotro client with: lotroclient.exe -a somefakeaccount -h 127.0.0.1:9000 -language de
  * or language en ;-)
