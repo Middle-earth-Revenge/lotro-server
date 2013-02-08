@@ -17,8 +17,8 @@ namespace LOTROPacketCaptureAndAutoDecryption
         private Decrypt decryptPacket;
         private FileStream fsOutput;
 
-        private readonly string pathOutputDecryptedPackets = "decrypted_packets\\";
-        private readonly string pathOutputOriginalPackets = "original_packets\\";
+		private readonly string pathOutputDecryptedPackets = "decrypted_packets" + Path.DirectorySeparatorChar;
+		private readonly string pathOutputOriginalPackets = "original_packets" + Path.DirectorySeparatorChar;
         private Int32 packetCounter = 0;
 
         private void device_OnPacketArrival(object sender, CaptureEventArgs e)
