@@ -38,7 +38,7 @@ namespace LOTRO
 		// decrypts both, server- and client packets
 		// true for a client packet
 		// false for a server packet
-		public byte[] generateDecryptedPacket(byte[] packet, bool isClientPacket)
+		public byte[] GenerateDecryptedPacket(byte[] packet, bool isClientPacket)
 		{
 			byte[] tempResult = new byte[packet.Length * 4];
 			int pos = 0;

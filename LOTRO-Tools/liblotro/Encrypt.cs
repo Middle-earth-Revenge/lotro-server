@@ -31,7 +31,7 @@ namespace LOTRO
 			this.quickLookUpArray = HelperMethods.Instance.getQuickLookUpListArrayServer();
 		}
 
-		public byte[] generateEncryptedPacket(byte[] data, bool isClient)
+		public byte[] GenerateEncryptedPacket(byte[] data, bool isClient)
 		{
 
 			byte[] tempResult = new byte[data.Length - 2];

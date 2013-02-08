@@ -137,7 +137,7 @@ namespace LOTROServer
 
             lock(this)
             {
-            packet = decryptClientPacket.generateDecryptedPacket(completePacket, true);
+            packet = decryptClientPacket.GenerateDecryptedPacket(completePacket, true);
             }
 
             // packet parse

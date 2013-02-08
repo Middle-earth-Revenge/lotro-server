@@ -45,7 +45,7 @@ namespace LOTROPacketCaptureAndAutoDecryption
                     if (srcIp.Equals(localIPAdress))
                     {
                         // decrypt client packets
-                        byte[] decryptedClientPacket = decryptPacket.generateDecryptedPacket(data, true);
+                        byte[] decryptedClientPacket = decryptPacket.GenerateDecryptedPacket(data, true);
 
                         fsOutput = new FileStream(@pathOutputDecryptedPackets + packetCounter + "_client", FileMode.Create);
                         fsOutput.Write(decryptedClientPacket, 0, decryptedClientPacket.Length);
@@ -58,7 +58,7 @@ namespace LOTROPacketCaptureAndAutoDecryption
                     else
                     {
                         // decrypt server packets
-                        byte[] decryptedServerPacket = decryptPacket.generateDecryptedPacket(data, false);
+                        byte[] decryptedServerPacket = decryptPacket.GenerateDecryptedPacket(data, false);
 
                         fsOutput = new FileStream(@pathOutputDecryptedPackets + packetCounter + "_server", FileMode.Create);
                         fsOutput.Write(decryptedServerPacket, 0, decryptedServerPacket.Length);
