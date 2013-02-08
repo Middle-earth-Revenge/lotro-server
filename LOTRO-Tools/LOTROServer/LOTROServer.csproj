@@ -45,24 +45,6 @@
     <Folder Include="server2packets\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="data\private">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\public">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\table_jump_client">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\table_jump_client_raw">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\table_lookup_client">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="data\table_lookup_client_raw">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="server1packets\packet0">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
