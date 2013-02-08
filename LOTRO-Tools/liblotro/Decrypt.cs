@@ -94,20 +94,20 @@ namespace LOTRO
 		}
 
 		/*  This is how the decryption is done:
-         * 1. Revers order of the 4 Bytes (Example: 0xEF 0xF5 0x49 0x85 => 0x85 0x49 0xF5 0xEF)
-         * 2. Get bit value of the 4 Byte word (Example:  0x85 0x49 0xF5 0xEF => 10000101010010011111010111101111)
-         * 3. Revers the order again (Example: 10000101010010011111010111101111 => 11110111101011111001001010100001)
-         * 4. Parse the bit array:
-         *    
-         *    if there is a 0, use the adress which is given in the first row an first column of the look-up-table
-         *    if there is a 1, use the adress which is given in the first row an second column of the look-up-table
-         *    
-         *    Jump to the row of the given adress in the look-up-table
-         *    
-         *    Do this for all following bits in the array til you can't jump any further in this table and find a jump to the second look-up-table
-         * 5. Get the value which is given in the second look-up-table
-         * 6. Start with 4 again til there are no bits left in the array
-         */
+		 * 1. Revers order of the 4 Bytes (Example: 0xEF 0xF5 0x49 0x85 => 0x85 0x49 0xF5 0xEF)
+		 * 2. Get bit value of the 4 Byte word (Example:  0x85 0x49 0xF5 0xEF => 10000101010010011111010111101111)
+		 * 3. Revers the order again (Example: 10000101010010011111010111101111 => 11110111101011111001001010100001)
+		 * 4. Parse the bit array:
+		 *
+		 *    if there is a 0, use the adress which is given in the first row an first column of the look-up-table
+		 *    if there is a 1, use the adress which is given in the first row an second column of the look-up-table
+		 *
+		 *    Jump to the row of the given adress in the look-up-table
+		 *
+		 *    Do this for all following bits in the array til you can't jump any further in this table and find a jump to the second look-up-table
+		 * 5. Get the value which is given in the second look-up-table
+		 * 6. Start with 4 again til there are no bits left in the array
+		 */
 		private byte[] processBlock(byte[] block, bool client)
 		{
 			int[,] jumpTable;
@@ -167,7 +167,7 @@ namespace LOTRO
 					pos += lookUpValue.Length;
 
 					lastIndex = 0;
-				}                  
+				}
 
 			}
 

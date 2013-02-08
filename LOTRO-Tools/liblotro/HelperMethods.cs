@@ -393,7 +393,7 @@ namespace LOTRO
 			return this.sessionKey;
 		}
 
-		#region RC4 algo taken from the web at http://dotnet-snippets.de/dns/rc4-verschluesselung-SID594.aspx
+#region RC4 algo taken from the web at http://dotnet-snippets.de/dns/rc4-verschluesselung-SID594.aspx
 
 		public void RC4(ref Byte[] encrypted, byte[] sessionKey)
 		{
