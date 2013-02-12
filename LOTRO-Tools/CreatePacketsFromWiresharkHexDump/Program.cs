@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 namespace CreatePacketsFromWiresharkHexDump
@@ -22,8 +19,8 @@ namespace CreatePacketsFromWiresharkHexDump
 
             if (!argsOK)
             {
-                System.Console.WriteLine("Please start with: CreatePacketsFromWiresharkHexDump -f <wireshark udp dump filename input> -o <filename outputfolder>");
-                System.Console.ReadKey();
+                Console.WriteLine("Please start with: CreatePacketsFromWiresharkHexDump -f <wireshark udp dump filename input> -o <filename outputfolder>");
+                Console.ReadKey();
                 Environment.Exit(0);
             }
 
@@ -176,7 +173,7 @@ namespace CreatePacketsFromWiresharkHexDump
                         fsInput = new FileStream(@args[1], FileMode.Open);
                         break;
                     case "-o":
-                        fsOutputName = @args[3];
+                        fsOutputName = @args[1];
                         break;
                     default:
                         argsOK = false;
@@ -201,7 +198,7 @@ namespace CreatePacketsFromWiresharkHexDump
             catch (Exception e)
             {
                 argsOK = false;
-                System.Console.WriteLine(e.ToString());
+                Console.WriteLine(e.ToString());
             }
 
             return argsOK;
