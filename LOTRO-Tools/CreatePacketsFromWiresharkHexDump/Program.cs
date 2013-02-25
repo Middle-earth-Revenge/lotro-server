@@ -8,6 +8,7 @@ namespace CreatePacketsFromWiresharkHexDump
         private FileStream fsInput;
         private FileStream fsOutput;
         private string fsOutputName = "";
+        private string fsInputName = "";
         private int packetsGenerated = 0;
         private int startByte = 0;
 
@@ -27,8 +28,8 @@ namespace CreatePacketsFromWiresharkHexDump
             MemoryStream ms = new MemoryStream();
             BufferedStream br = new BufferedStream(prg.fsInput);
 
-           
-            
+            Console.WriteLine("Parsing " + prg.fsInputName + " to directory " + prg.fsOutputName);
+
             int firstByte = br.ReadByte();
 
             if (firstByte == 0)
@@ -149,7 +150,7 @@ namespace CreatePacketsFromWiresharkHexDump
             if (prg.fsInput != null)
                 prg.fsInput.Close();
 
-
+			Console.WriteLine("Finished parsing");
 
         }
 
@@ -171,6 +172,7 @@ namespace CreatePacketsFromWiresharkHexDump
                 {
                     case "-f":
                         fsInput = new FileStream(@args[1], FileMode.Open);
+                        fsInputName = @args[1];
                         break;
                     case "-o":
                         fsOutputName = @args[1];
@@ -184,6 +186,7 @@ namespace CreatePacketsFromWiresharkHexDump
                 {
                     case "-f":
                         fsInput = new FileStream(@args[3], FileMode.Open);
+                        fsInputName = @args[3];
                         break;
                     case "-o":
                         fsOutputName = @args[3];
