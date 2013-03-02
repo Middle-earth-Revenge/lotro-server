@@ -13,9 +13,8 @@ namespace Account
 
         public AccountHandler()
         {
-            // in reality a account has to be authenticated through the webservice and then added to the list
-            // in this case we read "valid" accounts from a folder 
-
+            // in reality an account has to be authenticated through the webservice and then added to a list
+            // in our case we read "pseudo-valid" accounts from a folder
         }
 
         public User getUser(string accountName)

@@ -63,6 +63,9 @@ namespace Settings
             DirectoryInfo directoryInfo = Directory.CreateDirectory(@folderName);
         }
 
+        /// <summary>
+        /// If set to true the server will log information to the console and also store sent/received packets
+        /// </summary>
         [XmlElement("Debug")]
         public bool Debug
         {
@@ -70,6 +73,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// File (created in the startup directory) which will receive any debug output that also ends up on the console
+        /// </summary>
         [XmlElement("DebugLogFile")]
         public string DebugLogFile
         {
@@ -77,6 +83,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// Base folder for logged packets
+        /// </summary>
         [XmlElement("LogFolder")]
         public string LogFolder
         {
@@ -84,6 +93,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// Currently unused
+        /// </summary>
         [XmlElement("ClientLogFolder")]
         public string ClientLogFolder
         {
@@ -91,6 +103,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// Relative path (below LogFolder) to be used to store incoming/outgoing packets
+        /// </summary>
         [XmlElement("ServerLogFolder")]
         public string ServerLogFolder
         {
@@ -98,6 +113,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// Version identifaction string of the lotro client (e.g. "061004_netver:7563; didver:926CD8E3-2984-4CA9-9C6B-6DF2C8EB6BC3" to match the version from Q1 2013)
+        /// </summary>
         [XmlElement("RequiredClientVersion")]
         public string RequiredClientVersion
         {
@@ -105,6 +123,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// Human readable name for this server instance, e.g. "[EN] Testserver" (currently only used in the debug output)
+        /// </summary>
         [XmlElement("ServerName")]
         public string ServerName
         {
@@ -112,6 +133,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// Unique ID of the server, currently set to 241
+        /// </summary>
         [XmlElement("ServerId")]
         public UInt16 ServerId
         {
@@ -119,6 +143,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// UDP port the server will be listening to
+        /// </summary>
         [XmlElement("ServerPort")]
         public UInt16 ServerPort
         {
@@ -126,6 +153,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// Currently unused
+        /// </summary>
         [XmlElement("WorldServerIP")]
         public string WorldServerIP
         {
@@ -133,6 +163,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// Currently unused
+        /// </summary>
         [XmlElement("WorldServerPort")]
         public UInt16 WorldServerPort
         {
@@ -140,6 +173,9 @@ namespace Settings
             set;
         }
 
+        /// <summary>
+        /// Path of the folder containing the XML definitions for accounts
+        /// </summary>
         [XmlElement("AccountFolder")]
         public string AccountFolder
         {

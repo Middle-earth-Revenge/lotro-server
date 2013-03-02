@@ -17,20 +17,30 @@ namespace Account
 
         }
 
+        /// <summary>
+        /// The name of the account
+        /// </summary>
         [XmlElement("AccountName")]
         public string AccountName { get; set; }
 
-        // Not needed for this stage of private server version
+        /// <summary>
+        /// Unused at this early stage of private server version
+        /// </summary>
         [XmlElement("Password")]
         public string Password { get; set; }
 
         [XmlElement("IPAddress")]
         public string IPAddress { get; set; }
 
+        /// <summary>
+        /// Unused at this early stage of private server version
+        /// </summary>
         [XmlElement("ServerName")]
         public string ServerName { get; set; }
 
-        // not needed for this stage of private server version
+        /// <summary>
+        /// Unused at this early stage of private server version
+        /// </summary>
         [XmlElement("SessionTicket")]
         public string SessionTicket { get; set; }
 
