@@ -226,7 +226,7 @@ namespace Server
 
                         if (socketPacket.Buffer[0] == 0x00 & socketPacket.Buffer[1] == 0x00)
                         {
-                            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, "exception-packet-" + packetNumberClient, rawPacket, rawPacket.Length, true);
+                            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, packetNumberClient + "_out-exception", rawPacket, rawPacket.Length, true);
                         }
                         else
                         {
@@ -234,7 +234,7 @@ namespace Server
 
                             byte[] decrypted = dp.generateDecryptedPacket(rawPacket, true);
 
-                            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, "exception-packet-" + packetNumberClient, decrypted, decrypted.Length, true);
+                            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, packetNumberClient + "_out-exception", decrypted, decrypted.Length, true);
                         }
                     }
 

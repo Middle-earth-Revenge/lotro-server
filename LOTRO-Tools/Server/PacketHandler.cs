@@ -37,8 +37,14 @@ namespace Server
                 SetupHandler setupHandler = new SetupHandler();
                 payload = setupHandler.process(socketObject, beBinaryReader);
 
-                if(payload != null)
-                    Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, payload.Data.GetType().Name + Server.UdpServer.Instance.packetNumberClient, socketObject.Buffer, socketObject.Length, true);
+                if (payload != null)
+                {
+                    Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, Server.UdpServer.Instance.packetNumberClient + "_in-" + payload.Data.GetType().Name, socketObject.Buffer, socketObject.Length, true);
+                }
+                else
+                {
+                    Debug.WriteLineIf(Config.Instance.Debug, "Failed to handle payload", DateTime.Now.ToString() + " ");
+                }
                 
             }
             else // Handle everything else
@@ -58,10 +64,9 @@ namespace Server
 
                 byte[] gg = beBinaryReader.ReadBytes(999);
 
-                Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, "unknown-" + Server.UdpServer.Instance.packetNumberClient, gg, gg.Length, true);
+                Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, Server.UdpServer.Instance.packetNumberClient + "_in-unknown", gg, gg.Length, true);
             }
 
-            
 
             handleOutgoingPacket(socketObject, payload);
         }
@@ -73,7 +78,7 @@ namespace Server
                 socketObject.Buffer = payload.Serialize(beBinaryWriter);
                 socketObject.Length = (UInt16)socketObject.Buffer.Length;
 
-                Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, "send-" + Server.UdpServer.Instance.packetNumberClient, socketObject.Buffer, socketObject.Length, true);
+                Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, Server.UdpServer.Instance.packetNumberClient + "_out-" + payload.Data.GetType().Name, socketObject.Buffer, socketObject.Length, true);
 
                 UdpServer.Instance.addToSendQueue(socketObject);
             }

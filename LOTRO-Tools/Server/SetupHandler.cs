@@ -21,14 +21,14 @@ namespace Server
 
             if (payload.Data is Protocol.SessionSetup.Synchronize) // (first client packet)
             {
-                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") Synchronize received", DateTime.Now.ToString() + " ");
+                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") Synchronize received", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
 
                 Protocol.SessionSetup.Synchronize synchronize = (Protocol.SessionSetup.Synchronize)payload.Data;
 
                 if (!synchronize.ClientVersion.Equals(Config.Instance.RequiredClientVersion))
                 {
                     // Client version does not match expected server version (either to new or to old client)
-                    Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") has old client version: " + synchronize.ClientVersion + ", expected: " + Config.Instance.RequiredClientVersion, DateTime.Now.ToString() + " ");
+                    Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") has old client version: " + synchronize.ClientVersion + ", expected: " + Config.Instance.RequiredClientVersion, DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
 
                     OldClientVersion oldClientVersion = new OldClientVersion();
                     payload.Data = oldClientVersion;
@@ -55,7 +55,7 @@ namespace Server
                         payload.Header.SessionID = Config.Instance.ServerId;
                         payload.Header.ACKNR = session.ACKNRServer;
 
-                        Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") now uses session id [" + session.ID + "]", DateTime.Now.ToString() + " ");
+                        Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") now uses session id [" + session.ID + "]", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
                     }
                     // else server full packet
                 }
@@ -63,7 +63,7 @@ namespace Server
             }
             else if (payload.Data is Protocol.SessionSetup.Acknowledgment) // (second client packet)
             {
-                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") Acknowledgment received", DateTime.Now.ToString());
+                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") Acknowledgment received", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
 
                 Protocol.SessionSetup.Acknowledgment acknowledgment = (Protocol.SessionSetup.Acknowledgment)payload.Data;
 
@@ -72,18 +72,17 @@ namespace Server
                 if (clientSession == null)
                 {
                     // We don't know about this client sesion
-                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] not found.", DateTime.Now.ToString() + " ");
+                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] not found.", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
                 }
                 else if (acknowledgment.StartupSessionKey.Equals(clientSession.StartupKey)) // && acknr is session + 1!!!
                 {
                     clientSession.SetupComplete = true;
-
-                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] successful authenticated.", DateTime.Now.ToString() + " ");
+                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] successful authenticated.", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
                 }
                 else
                 {
                     // Startup key does not match
-                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] did not match startup session key.", DateTime.Now.ToString() + " ");
+                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] did not match startup session key.", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
                 }
 
 
@@ -108,7 +107,7 @@ namespace Server
             }
             else
             {
-                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") sent unknown payload", DateTime.Now.ToString());
+                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") sent unknown payload", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
             }
 
             // are there more cases?
