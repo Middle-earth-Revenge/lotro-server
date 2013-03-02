@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings", "Settings\Settin
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Account", "Account\Account.csproj", "{8A03452C-C66E-45B0-8AC2-1EBA0CDE68CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +111,16 @@ Global
 		{8A03452C-C66E-45B0-8AC2-1EBA0CDE68CA}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8A03452C-C66E-45B0-8AC2-1EBA0CDE68CA}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8A03452C-C66E-45B0-8AC2-1EBA0CDE68CA}.Release|x86.ActiveCfg = Release|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
