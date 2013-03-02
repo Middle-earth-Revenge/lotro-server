@@ -91,11 +91,13 @@ namespace Server
                 Thread sendWorker = new Thread(startSendQueue);
                 sendWorker.IsBackground = true;
                 sendWorker.Priority = ThreadPriority.Normal;
+                sendWorker.Name = "sendWorker";
                 sendWorker.Start();
 
                 Thread receiveWorker = new Thread(startReceiveQueue);
                 receiveWorker.IsBackground = true;
                 receiveWorker.Priority = ThreadPriority.Highest;
+                receiveWorker.Name = "receiveWorker";
                 receiveWorker.Start();
 
                 listenForData();
