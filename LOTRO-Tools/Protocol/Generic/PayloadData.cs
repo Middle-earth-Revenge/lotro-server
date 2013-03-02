@@ -10,7 +10,7 @@ namespace Protocol.Generic
 
         public UInt16 Length { get; set; }
         
-        public abstract UInt16 Request { get;}
+        public abstract UInt16 Request { get; }
         public abstract byte[] Response { get; }
 
         public UInt32 Checksum { get; set; }
@@ -26,7 +26,7 @@ namespace Protocol.Generic
 
             byte[] rawBytes = ((MemoryStream)beBinaryWriter.BaseStream).ToArray();
 
-            Checksum = calcChecksum(rawBytes);
+            Checksum = Helper.HelperMethods.Instance.getChecksumFromData(rawBytes);
             Length = (UInt16)rawBytes.Length;
 
             beBinaryWriter.BaseStream.Position = 0;
@@ -34,11 +34,5 @@ namespace Protocol.Generic
             return rawBytes;
         }
 
-        private UInt32 calcChecksum(byte[] rawBytes)
-        {
-            UInt32 checksum = Helper.HelperMethods.Instance.getChecksumFromData(rawBytes);
-
-            return checksum;
-        }
     }
 }
