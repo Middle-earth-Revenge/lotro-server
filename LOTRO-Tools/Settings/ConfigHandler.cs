@@ -7,28 +7,34 @@ using System.Xml;
 
 namespace Settings
 {
+    /// <summary>
+    /// Load and write config.xml files from/into Config-objects
+    /// </summary>
     public class ConfigHandler
     {
 
+        /// <summary>
+        /// Read the given config.xml file
+        /// </summary>
+        /// <param name="fileName">Filename to read the config.xml from</param>
+        /// <returns>The static pointer Settings.Config.Instance (e.g. only a
+        /// single instance of a config.xml can be used withing a server). If
+        /// reading the file failes this will be null.</returns>
         public Settings.Config readConfig(string fileName)
         {
-            XmlSerializer serializer = null;
-
             try
             {
-                serializer = new XmlSerializer(typeof(Settings.Config));
+                XmlSerializer serializer = new XmlSerializer(typeof(Settings.Config));
 
                 using (FileStream fs = new FileStream(@fileName, FileMode.Open))
                 {
-                    Settings.Config.Instance = (Settings.Config)serializer.Deserialize(fs);
+                    Settings.Config.Instance = (Settings.Config) serializer.Deserialize(fs);
 
                     Settings.Config.Instance.init();
                     
                     fs.Close();
                     fs.Dispose();
                 }
-
-                serializer = null;
             }
             catch (FileNotFoundException fnf)
             {
@@ -46,27 +52,39 @@ namespace Settings
             return Settings.Config.Instance;
         }
 
-        // don't want to write a config
-        private void writeConfig(Settings.Config config)
+        /// <summary>
+        /// Write a Config to the given file
+        /// Note: we don't want to write a config right now, but keep the code around
+        /// </summary>
+        /// <param name="fileName">Filename to write the config.xml to</param>
+        /// <param name="config">configuration to write to a file</param>
+        private void writeConfig(string fileName, Settings.Config config)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(Settings.Config));
+            try
+            {
+                XmlSerializer serializer = new XmlSerializer(typeof(Settings.Config));
 
-            FileStream fs = new FileStream(@"config.xml", FileMode.Create);
+                using (FileStream fs = new FileStream(@fileName, FileMode.Create))
+                {
 
-            XmlWriterSettings xws = new XmlWriterSettings();
-            xws.Indent = true;
-            xws.IndentChars = "\t";
-            
-            XmlWriter writer = XmlWriter.Create(fs,xws);
+                    XmlWriterSettings xws = new XmlWriterSettings();
+                    xws.Indent = true;
+                    xws.IndentChars = "\t";
 
-            serializer.Serialize(writer, config);
-            
-            writer.Close();
-            fs.Close();
-            fs = null;
-            writer = null;          
+                    using (XmlWriter writer = XmlWriter.Create(fs, xws))
+                    {
+                        serializer.Serialize(writer, config);
+                        writer.Close();
+                    }
 
-            serializer = null;
+                    fs.Close();
+                    fs.Dispose();
+                }
+            }
+            catch (SerializationException se)
+            {
+                Console.Write(se.Message);
+            }
         }
     }
 }
