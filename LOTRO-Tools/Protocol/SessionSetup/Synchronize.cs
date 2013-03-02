@@ -15,7 +15,7 @@ namespace Protocol.SessionSetup
 
         private UInt32 chksum = 0; // implement later for checksum check client packet
 
-        public string ClientVersion {get; set;}
+        public string ClientVersion { get; set; }
         public DateTime LocalTimeStarted { get; set; }
         public UInt32 UnknownA { get; set; }
         public UInt32 UnknownB { get; set; }
@@ -23,7 +23,7 @@ namespace Protocol.SessionSetup
 
         public override UInt16 Request
         {
-            get {return 1;}
+            get { return 1; }
         }
 
         public override byte[] Response 
