@@ -77,7 +77,7 @@ namespace Protocol.Generic
             if(SequenceNumber == 0)
                 bw.Write((short)0x00);
 
-            bw.WriteUInt16BE(0xf1);//Settings.Config.Instance.ServerID); // ServerID
+            bw.WriteUInt16BE(Settings.Config.Instance.ServerId); // ServerID
             bw.WriteUInt16BE(DataLength); // Data part length
             bw.Write(Action); // ActionA
             //bw.WriteUInt16BE(ActionB); // ActionB
