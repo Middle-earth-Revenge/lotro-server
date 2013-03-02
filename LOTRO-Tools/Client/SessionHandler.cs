@@ -132,6 +132,7 @@ namespace Account
             {
                 AccountHandler accountHandler = new AccountHandler();
 
+                // TODO accountHandler.getUser(accountName);
                 User userObject = new User(accountName);
 
                 userObject.IPAddress = endpoint.ToString().Split(':')[0];
