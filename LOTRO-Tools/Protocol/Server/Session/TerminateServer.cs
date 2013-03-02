@@ -23,22 +23,6 @@ namespace Protocol.Server.Session
             return this;
         }
 
-        // needs to be implemented
-        public override byte[] Serialize(BEBinaryWriter beBinaryWriter)
-        {
-            beBinaryWriter.Write(data);
-            beBinaryWriter.Flush();
-
-            byte[] rawBytes = ((MemoryStream)beBinaryWriter.BaseStream).ToArray();
-
-            Length = (UInt16)rawBytes.Length;
-            Checksum = Helper.HelperMethods.Instance.getChecksumFromData(rawBytes);
-
-            beBinaryWriter.BaseStream.Position = 0;
-
-            return rawBytes;
-        }       
-
         public override UInt16 Request
         {
             get { return 8; }
