@@ -113,11 +113,11 @@ namespace Server
 
             if (serverCreated)
             {
+                isRunning = false;
                 serverSocket.Shutdown(SocketShutdown.Both);
                 serverSocket.Close();
                 serverSocket.Dispose();
                 serverSocket = null;
-                isRunning = false;
             }
         }
 
