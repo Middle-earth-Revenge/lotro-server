@@ -6,6 +6,7 @@ using System.Xml.Serialization;
 
 namespace Account
 {
+    [Serializable]
     class Character
     {
         /// <summary>
