@@ -11,7 +11,7 @@ using LOTRO;
  * or language en ;-)
  */
 
-namespace LOTROServer
+namespace Server
 {
     class Program
     {

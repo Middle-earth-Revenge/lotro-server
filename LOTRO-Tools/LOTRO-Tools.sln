@@ -5,7 +5,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOTROendecrypt", "LOTROende
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatePacketsFromWiresharkHexDump", "CreatePacketsFromWiresharkHexDump\CreatePacketsFromWiresharkHexDump.csproj", "{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOTROServer", "LOTROServer\LOTROServer.csproj", "{80770937-969A-40F1-8FD1-FF9FC1021343}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{80770937-969A-40F1-8FD1-FF9FC1021343}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOTROendecryptClient", "LOTROendecryptClient\LOTROendecryptClient.csproj", "{6636BF97-0361-4AFF-BAF2-BEC426D9A61B}"
 EndProject
