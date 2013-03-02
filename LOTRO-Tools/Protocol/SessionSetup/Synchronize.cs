@@ -9,7 +9,7 @@ using Helper;
 
 namespace Protocol.SessionSetup
 {
-    public class Synchronize:PayloadData
+    public class Synchronize : PayloadData
     {
         // Client Data
 
@@ -36,7 +36,7 @@ namespace Protocol.SessionSetup
 
         // Server Data
 
-        public Synchronize():base()
+        public Synchronize() : base()
         {
 
         }
