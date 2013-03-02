@@ -45,7 +45,7 @@ namespace Server
         public UInt32 packetNumberClient = 0;
 
         // for debug reason
-        byte[] lastPacket; // if server responds to slow, you must handle packets which were received twice - reject them somehow
+        //byte[] lastPacket; // if server responds to slow, you must handle packets which were received twice - reject them somehow
 
         public static UdpServer Instance
         {
