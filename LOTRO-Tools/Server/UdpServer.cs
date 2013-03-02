@@ -41,6 +41,8 @@ namespace Server
         private BlockingCollection<SocketObject> sendQueue = null;
 
         private bool isRunning = false;
+        private Thread sendWorker;
+        private Thread receiveWorker;
 
         public UInt32 packetNumberClient = 0;
 
@@ -88,12 +90,12 @@ namespace Server
             {
                 isRunning = openReceiverSocket(Config.Instance.ServerPort);
 
-                Thread sendWorker = new Thread(startSendQueue);
+                sendWorker = new Thread(startSendQueue);
                 sendWorker.IsBackground = true;
                 sendWorker.Priority = ThreadPriority.Normal;
                 sendWorker.Start();
 
-                Thread receiveWorker = new Thread(startReceiveQueue);
+                receiveWorker = new Thread(startReceiveQueue);
                 receiveWorker.IsBackground = true;
                 receiveWorker.Priority = ThreadPriority.Highest;
                 receiveWorker.Start();
@@ -116,6 +118,8 @@ namespace Server
                 serverSocket.Dispose();
                 serverSocket = null;
                 isRunning = false;
+                sendWorker.Join();
+                receiveWorker.Join();
             }
         }
 
