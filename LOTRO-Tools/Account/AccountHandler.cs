@@ -50,8 +50,6 @@ namespace Account
                 using (FileStream fs = new FileStream(@Settings.Config.Instance.AccountFolder + Path.PathSeparator + accountName + ".xml", FileMode.Open))
                 {
                     user = (User) serializer.Deserialize(fs);
-                    fs.Close();
-                    fs.Dispose();
                 }
             }
             catch (IOException ioe)
@@ -86,8 +84,6 @@ namespace Account
                     {
                         Character character = (Character) serializer.Deserialize(fs);
                         user.Characters.Add(character.Name, character);
-                        fs.Close();
-                        fs.Dispose();
                     }
                 }
             }

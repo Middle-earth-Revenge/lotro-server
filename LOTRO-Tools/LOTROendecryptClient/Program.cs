@@ -6,7 +6,7 @@ using LOTRO;
 
 namespace LOTROendecryptClient
 {
-	class Program
+	class Program : IDisposable
 	{
 
 		private Decrypt packetDecrypt;
@@ -161,5 +161,16 @@ namespace LOTROendecryptClient
 			return argsOK;
 		}
 
+        public void Dispose()
+        {
+            if (fsInput != null)
+            {
+                fsInput.Dispose();
+            }
+            if (fsOutput != null)
+            {
+                fsOutput.Dispose();
+            }
+        }
 	}
 }

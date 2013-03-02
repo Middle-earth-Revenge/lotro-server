@@ -32,7 +32,6 @@ namespace Settings
 
                     Settings.Config.Instance.init();
                     
-                    fs.Close();
                     fs.Dispose();
                 }
             }
@@ -77,7 +76,6 @@ namespace Settings
                         writer.Close();
                     }
 
-                    fs.Close();
                     fs.Dispose();
                 }
             }

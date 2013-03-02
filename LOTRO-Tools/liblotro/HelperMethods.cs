@@ -8,7 +8,7 @@ using System.Collections;
 namespace LOTRO
 {
 	
-	public class HelperMethods
+	public class HelperMethods : IDisposable
 	{
 		
 		private RSACryptoServiceProvider rsaCryptoServiceProvider;
@@ -811,5 +811,13 @@ namespace LOTRO
 			
 			return checksumPacket;
 		}
+
+        public void Dispose()
+        {
+            if (rsaCryptoServiceProvider != null)
+            {
+                rsaCryptoServiceProvider.Dispose();
+            }
+        }
 	}
 }

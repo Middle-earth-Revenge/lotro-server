@@ -3,7 +3,7 @@ using System.IO;
 
 namespace CreatePacketsFromWiresharkHexDump
 {
-    class Program
+    class Program : IDisposable
     {
         private FileStream fsInput;
         private FileStream fsOutput;
@@ -207,5 +207,16 @@ namespace CreatePacketsFromWiresharkHexDump
             return argsOK;
         }
 
+        public void Dispose()
+        {
+            if (fsInput != null)
+            {
+                fsInput.Dispose();
+            }
+            if (fsOutput != null)
+            {
+                fsOutput.Dispose();
+            }
+        }
     }
 }

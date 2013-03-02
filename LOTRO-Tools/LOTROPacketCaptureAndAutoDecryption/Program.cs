@@ -10,7 +10,7 @@ using LOTRO;
 
 namespace LOTROPacketCaptureAndAutoDecryption
 {
-    class Program
+    class Program : IDisposable
     {
 
         private IPAddress localIPAdress;
@@ -152,6 +152,14 @@ namespace LOTROPacketCaptureAndAutoDecryption
 
             // Close the pcap device
             device.Close();
+        }
+
+        public void Dispose()
+        {
+            if (fsOutput != null)
+            {
+                fsOutput.Dispose();
+            }
         }
     }
 }
