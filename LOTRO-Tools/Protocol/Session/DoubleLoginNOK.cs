@@ -9,9 +9,10 @@ namespace Protocol.Session
     public class DoubleLoginNOK : PayloadData
     {
 
-        private byte[] data = new byte[] { 0x00 };
-
-        
+        public DoubleLoginNOK()
+        {
+            data = new byte[] { 0x00 };
+        }
 
         public override object Deserialize(BEBinaryReader ber)
         {

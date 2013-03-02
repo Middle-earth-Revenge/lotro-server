@@ -10,7 +10,11 @@ namespace Protocol.Server.Session
 {
     public class TerminateServer : PayloadData
     {
-        private byte[] data = new byte[] { 0x6E, 0x25,0xFB,0x0D, 0x00, 0x00, 0x00, 0x00 };
+
+        public TerminateServer()
+        {
+            data = new byte[] { 0x6E, 0x25, 0xFB, 0x0D, 0x00, 0x00, 0x00, 0x00 };
+        }
 
         public override object Deserialize(BEBinaryReader ber)
         {
