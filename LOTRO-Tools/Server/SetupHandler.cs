@@ -69,11 +69,21 @@ namespace Server
 
                 Session clientSession = SessionHandler.Instance.getClientSession(payload.Header.SessionID, socketObject.EndPoint);
 
-                if (clientSession != null && acknowledgment.StartupSessionKey.Equals(clientSession.StartupKey)) // && acknr is session + 1!!!
+                if (clientSession == null)
+                {
+                    // We don't know about this client sesion
+                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] not found.", DateTime.Now.ToString() + " ");
+                }
+                else if (acknowledgment.StartupSessionKey.Equals(clientSession.StartupKey)) // && acknr is session + 1!!!
                 {
                     clientSession.SetupComplete = true;
 
                     Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] successful authenticated.", DateTime.Now.ToString() + " ");
+                }
+                else
+                {
+                    // Startup key does not match
+                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] did not match startup session key.", DateTime.Now.ToString() + " ");
                 }
 
 
