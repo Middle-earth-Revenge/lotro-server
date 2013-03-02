@@ -47,6 +47,9 @@ namespace Settings
 
         }
 
+        /// <summary>
+        /// Create necessary directories that will be returned by this class 
+        /// </summary>
         internal void init()
         {
             if (this.Debug)
@@ -58,9 +61,17 @@ namespace Settings
             createFolder(AccountFolder);
         }
 
+        /// <summary>
+        /// Create a directory and verify it succeeded
+        /// </summary>
+        /// <param name="folderName">The directory to create</param>
         private void createFolder(string folderName)
         {
             DirectoryInfo directoryInfo = Directory.CreateDirectory(@folderName);
+            if (!directoryInfo.Exists)
+            {
+                throw new IOException("Could not create directory " + folderName);
+            }
         }
 
         /// <summary>

@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Text;
 using System.Xml.Serialization;
+using System.Collections;
 
 namespace Account
 {
+    /// <summary>
+    /// An accounts used to login against the server. Consists of many Characters
+    /// </summary>
     [Serializable]
     public class User
     {
@@ -44,5 +48,7 @@ namespace Account
         [XmlElement("SessionTicket")]
         public string SessionTicket { get; set; }
 
+        [XmlIgnore]
+        public SortedList Characters { get; set; }
     }
 }

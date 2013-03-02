@@ -6,6 +6,9 @@ using System.Xml.Serialization;
 
 namespace Account
 {
+    /// <summary>
+    /// A single character to be used in the game
+    /// </summary>
     [Serializable]
     class Character
     {
