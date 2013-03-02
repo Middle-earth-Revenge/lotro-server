@@ -25,10 +25,10 @@ namespace Server
 
                 Protocol.SessionSetup.Synchronize synchronize = (Protocol.SessionSetup.Synchronize)payload.Data;
 
-                // Client is too old, update to a new version
                 if (!synchronize.ClientVersion.Equals(Config.Instance.RequiredClientVersion))
                 {
-                    Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") has old client version.", DateTime.Now.ToString() + " ");
+                    // Client version does not match expected server version (either to new or to old client)
+                    Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") has old client version: " + synchronize.ClientVersion + ", expected: " + Config.Instance.RequiredClientVersion, DateTime.Now.ToString() + " ");
 
                     OldClientVersion oldClientVersion = new OldClientVersion();
                     payload.Data = oldClientVersion;
@@ -37,6 +37,7 @@ namespace Server
                 }
                 else
                 {
+                    // Client version matches expected server version, start a session
                     Session session = SessionHandler.Instance.addClientSession(socketObject.EndPoint, synchronize.AccountName, synchronize.ClientVersion, synchronize.LocalTimeStarted);
 
                     if (session != null)
