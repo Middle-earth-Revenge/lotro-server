@@ -60,9 +60,8 @@ namespace Server
                     // else server full packet
                 }
 
-            } // Synchronize
-
-            if (payload.Data is Protocol.SessionSetup.Acknowledgment) // (second client packet)
+            }
+            else if (payload.Data is Protocol.SessionSetup.Acknowledgment) // (second client packet)
             {
                 Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") Acknowledgment received", DateTime.Now.ToString());
 
@@ -96,6 +95,10 @@ namespace Server
                 }*/
 
                 payload = null;
+            }
+            else
+            {
+                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") sent unknown payload", DateTime.Now.ToString());
             }
 
             // are there more cases?
