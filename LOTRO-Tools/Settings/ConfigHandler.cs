@@ -29,10 +29,7 @@ namespace Settings
                 using (FileStream fs = new FileStream(@fileName, FileMode.Open))
                 {
                     Settings.Config.Instance = (Settings.Config) serializer.Deserialize(fs);
-
                     Settings.Config.Instance.init();
-                    
-                    fs.Dispose();
                 }
             }
             catch (FileNotFoundException fnf)
@@ -73,10 +70,7 @@ namespace Settings
                     using (XmlWriter writer = XmlWriter.Create(fs, xws))
                     {
                         serializer.Serialize(writer, config);
-                        writer.Close();
                     }
-
-                    fs.Dispose();
                 }
             }
             catch (SerializationException se)
