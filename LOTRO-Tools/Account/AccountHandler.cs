@@ -46,7 +46,7 @@ namespace Account
             try
             {
                 XmlSerializer serializer = new XmlSerializer(typeof(User));
-                using (FileStream fs = new FileStream(@Settings.Config.Instance.AccountFolder + Path.PathSeparator + accountName + ".xml", FileMode.Open))
+                using (FileStream fs = new FileStream(@Settings.Config.Instance.AccountFolder + "\\" + accountName + ".xml", FileMode.Open))
                 {
                     user = (User) serializer.Deserialize(fs);
                 }
@@ -72,7 +72,7 @@ namespace Account
         /// <param name="accountName">name of the logged in account</param>
         private void parseAccounts(User user, string accountName)
         {
-            string[] characterFiles = Directory.GetFiles(@Settings.Config.Instance.AccountFolder + Path.PathSeparator + accountName);
+            string[] characterFiles = Directory.GetFiles(@Settings.Config.Instance.AccountFolder + "\\" + accountName);
 
             try
             {
