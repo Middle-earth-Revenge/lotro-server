@@ -82,6 +82,8 @@ namespace CreatePacketsFromWiresharkHexDump
                 }
             }
 
+            Directory.CreateDirectory(Path.GetDirectoryName(prg.fsOutputName));
+
             // the first packet of dump
             prg.fsOutput = new FileStream(@prg.fsOutputName + prg.packetsGenerated, FileMode.Create);
 
