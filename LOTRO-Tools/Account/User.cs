@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Text;
+using System.Collections.Generic;
 using System.Xml.Serialization;
-using System.Collections;
 
 namespace Account
 {
@@ -49,6 +48,6 @@ namespace Account
         public string SessionTicket { get; set; }
 
         [XmlIgnore]
-        public SortedList Characters { get; set; }
+        public SortedList<string, Character> Characters { get; set; }
     }
 }
