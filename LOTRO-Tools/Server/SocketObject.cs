@@ -2,6 +2,16 @@
 using System.Net;
 using Protocol.Generic;
 
+/* Class SocketObject
+ * 
+ * Contains:
+ * 
+ * raw buffer [max. 65535 bytes]
+ * client endpoint [eg. 127.0.0.1:56789]
+ * 
+*/
+
+
 namespace Server
 {
     /// <summary>

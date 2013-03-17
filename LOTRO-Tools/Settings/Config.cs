@@ -164,6 +164,13 @@ namespace Settings
             set;
         }
 
+        [XmlElement("MaxClients")]
+        public UInt16 MaxClients
+        {
+            get;
+            set;
+        }
+
         /// <summary>
         /// Currently unused
         /// </summary>

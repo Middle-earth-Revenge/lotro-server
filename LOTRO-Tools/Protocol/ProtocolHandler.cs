@@ -40,6 +40,7 @@ namespace Protocol
          *               41 91 7D E3      FD F9 98 20 06 D3 B3 71
          * 
          * 00 10 00 00 : 6E 25 FB 0D 00 00 00 00
+         * 08 00 00 03 : C0 00 00 00 46 00
          * 
          * 
          * 
@@ -47,13 +48,18 @@ namespace Protocol
          * 
          * 
          * 
+         * 00 00 10 00 : 00 00 00 02 00 00 00 40 00 00 00 41 (server requests missing packets)
+         * 08 00 00 03 : C0 00 00 00 46 00 (client resends the missing packet)
+         * 
+         * 08 00 10 00 : 00 00 00 01 00 00 00 4B (client requests missing packet)
+         * 08 00 00 03 : 28 00 00 00 73 00 (server responds with missing data)
          * 
          * 
          * 
-         * 
-         * 
-         * 
-         * 
+         * Parse order [08 00 40 02]
+         * 40
+         * 08
+         * (02)
          * 
          */
 
@@ -70,7 +76,7 @@ namespace Protocol
         {
             Terminate = 0x80, //CL and SV: [2]
             ConfirmSequence = 0x40, // CL SV [2]
-            ReRequestPacketFromCL = 0x10, // 
+            ReRequestPacketFromCL = 0x10, // [2]
             ResendMissingPacketToSV = 0x07, //  [3]
             Data = 0x06, // CL SV [3]
             Unknown2 = 0x02, // unknown [3]
@@ -92,30 +98,33 @@ namespace Protocol
             }
         }
 
-        public PayloadData getPayloadObject(byte[] headerAction)
+        public PayloadData getPayloadSession(byte[] action)
         {
-            switch (headerAction[2])
+            switch (action[2])
             {
                 case (byte)Session.Terminate:
-                    return new SessionSetup.Session.Terminate();
-                case (byte)Session.ConfirmSequence:   
+                    break;//return new SessionSetup.Session.Terminate();
+                case (byte)Session.ConfirmSequence:
 
-                    if (headerAction[0] == 0 && headerAction[3] == 0)
+                    if (action[0] == 0 && action[3] == 0)
                     {
                         return new Server.Session.ConfirmSequence();
                     }
-                    return null;
+                    break;
+                    //return null;
                     //else
                     //{
                         //throw new NotImplementedException("Action 3 not there."); ignore til now
                     //}
                 case (byte)Session.Data: // needs handling, because packets can get lost. reorder packets!
-                    throw new NotImplementedException("Not implemented.");
+                    break;//throw new NotImplementedException("Not implemented.");
                 case (byte)Session.ResendMissingPacketToSV:
-                    throw new NotImplementedException("Not implemented.");  
+                    break;//throw new NotImplementedException("Not implemented.");  
                 default:
-                    throw new Exception("Action 3 nothing found.");
+                    break;//throw new Exception("Action 3 nothing found.");
             }
+
+            return null;
 
         }
 

@@ -10,11 +10,7 @@ namespace Protocol.Server.Session
 {
     public class TerminateServer : PayloadData
     {
-
-        public TerminateServer()
-        {
-            data = new byte[] { 0x6E, 0x25, 0xFB, 0x0D, 0x00, 0x00, 0x00, 0x00 };
-        }
+        private byte[] data = new byte[] { 0x6E, 0x25,0xFB,0x0D, 0x00, 0x00, 0x00, 0x00 };
 
         public override object Deserialize(BEBinaryReader ber)
         {
@@ -23,6 +19,14 @@ namespace Protocol.Server.Session
             return this;
         }
 
+        // needs to be implemented
+        public override byte[] Serialize(BEBinaryWriter beBinaryWriter)
+        {
+            
+
+            return new byte[] {};
+        }       
+
         public override UInt16 Request
         {
             get { return 8; }
@@ -30,7 +34,7 @@ namespace Protocol.Server.Session
 
         public override byte[] Response
         {
-            get { return new byte[] { 0x00, 0x10, 0x00, 0x00 }; }
+            get { return new byte[] { 0x00, 0x00, 0x80, 0x00 }; }
         }
     }
 }

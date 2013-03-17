@@ -4,19 +4,20 @@ using System.Diagnostics;
 using System.IO;
 using System.Xml.Serialization;
 
-namespace Account
+namespace AccountControl
 {
     /// <summary>
     /// Loads accounts/characters from file
     /// </summary>
-    public class AccountHandler
+    public class Handler
     {
         private List<User> validAccounts = new List<User>();
 
-        public AccountHandler()
+        public Handler()
         {
-            // in reality an account has to be authenticated through the webservice and then added to a list
-            // in our case we read "pseudo-valid" accounts from a folder
+            // in reality a account has to be authenticated through the webservice and then added to the list
+            // in this case we read "valid" accounts from a folder 
+
         }
 
         /// <summary>
@@ -27,10 +28,11 @@ namespace Account
         public User getUser(string accountName)
         {
             User user = parseUser(accountName);
-            if (user != null)
-            {
-                parseAccounts(user, accountName);
-            }
+// TODO: commented for now, not implemented in tammo's code
+//            if (user != null)
+//            {
+//                parseAccounts(user, accountName);
+//            }
             return user;
         }
 

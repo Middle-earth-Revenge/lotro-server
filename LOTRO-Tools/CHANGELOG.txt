@@ -1,0 +1,15 @@
+17.03.2013	When using admin as account, you can create a pseudo character (sometimes). Parsing isn't done, so it's a random process.
+14.03.2013	Client working til character creation screen. Checksum working, no patched client needed. Creation of packets is generic. You can change account file.
+		Basic authentication cases working. Shop setup is not available and thrown away.
+		
+		todo:
+			- handle missed server packets, this is essential(!!!), because sometimes client exe crashes if certain packet missed!!!
+			- handle client packets after session setup(til now no need to)
+			- handle character creation (chara's can't be saved, it's a lot of parsing values inside packet). People can create different
+			  chara's and mark the changing values inside packet, so that we find a pattern.
+			- rewrite parsing part, it's too confusing (server packets are send in a row, the real server isn't working so, he is waiting upon client response)
+			  put packet handling into client session, not a general one
+			
+		
+			
+01.01.2013	Initial Version

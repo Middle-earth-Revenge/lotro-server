@@ -9,7 +9,6 @@ namespace Protocol.SessionSetup
 {
     public class SYNACK : Protocol.Generic.PayloadData
     {
-        private readonly byte[] SYNACK_CONST = new byte[] { 0xDA, 0x82, 0xCF, 0x61, 0x37, 0x12, 0x45, 0x85, 0x9C, 0x4E, 0x1C, 0x6D, 0x01, 0xF1, 0x62, 0xBB };
 
         public UInt64 StartupSessionKey { get; set; }
         public UInt16 SessionID { get; set; }
@@ -19,8 +18,7 @@ namespace Protocol.SessionSetup
         public override object Deserialize(BEBinaryReader ber)
         {
             throw new NotImplementedException("This should not be called");
-
-         }
+        }
 
         public override byte[] Serialize(BEBinaryWriter beBinaryWriter)
         {
@@ -30,7 +28,7 @@ namespace Protocol.SessionSetup
             beBinaryWriter.WriteUInt16BE(SessionID);
             beBinaryWriter.WriteUInt32BE(ChecksumServer);
             beBinaryWriter.WriteUInt32BE(ChecksumClient);
-            beBinaryWriter.Write(SYNACK_CONST); // const value, whatever?
+            beBinaryWriter.Write(new byte[] { 0xDA, 0x82, 0xCF, 0x61, 0x37, 0x12, 0x45, 0x85, 0x9C, 0x4E, 0x1C, 0x6D, 0x01, 0xF1, 0x62, 0xBB }); // const value, whatever?
 
             beBinaryWriter.Flush();
 

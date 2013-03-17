@@ -5,10 +5,11 @@
 	<LogFolder>Log</LogFolder>
 	<ClientLogFolder>Clientpackets</ClientLogFolder>
 	<ServerLogFolder>Serverpackets</ServerLogFolder>
-	<RequiredClientVersion>061004_netver:7563; didver:926CD8E3-2984-4CA9-9C6B-6DF2C8EB6BC3</RequiredClientVersion>
+	<RequiredClientVersion>061004_netver:7594; didver:926CD8E3-2984-4CA9-9C6B-6DF2C8EB6BC3</RequiredClientVersion>
 	<ServerName>[DE] Duesterwald</ServerName>
 	<ServerId>241</ServerId>
 	<ServerPort>9000</ServerPort>
+	<MaxClients>10</MaxClients>
 	<WorldServerIP>127.0.0.1</WorldServerIP>
 	<WorldServerPort>9001</WorldServerPort>
 	<AccountFolder>Accounts</AccountFolder>

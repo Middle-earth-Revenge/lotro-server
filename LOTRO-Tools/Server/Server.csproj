@@ -51,13 +51,13 @@
     <Compile Include="UdpServer.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Account\Account.csproj">
+    <ProjectReference Include="..\Account\AccountControl.csproj">
       <Project>{8A03452C-C66E-45B0-8AC2-1EBA0CDE68CA}</Project>
-      <Name>Account</Name>
+      <Name>AccountControl</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Client\Client.csproj">
+    <ProjectReference Include="..\Client\SessionControl.csproj">
       <Project>{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}</Project>
-      <Name>Client</Name>
+      <Name>SessionControl</Name>
     </ProjectReference>
     <ProjectReference Include="..\Protocol\Protocol.csproj">
       <Project>{9DB4835F-A84F-4AE7-BE31-36BBC65B6A17}</Project>

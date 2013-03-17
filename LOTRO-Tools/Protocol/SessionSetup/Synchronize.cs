@@ -9,21 +9,22 @@ using Helper;
 
 namespace Protocol.SessionSetup
 {
-    public class Synchronize : PayloadData
+    public class Synchronize:PayloadData
     {
         // Client Data
 
-        //private UInt32 chksum = 0; // implement later for checksum check client packet
+        private UInt32 chksum = 0; // implement later for checksum check client packet
 
-        public string ClientVersion { get; set; }
+        public string ClientVersion {get; set;}
         public DateTime LocalTimeStarted { get; set; }
         public UInt32 UnknownA { get; set; }
-        public UInt32 UnknownB { get; set; }
+        public UInt32 HasGLSTicket { get; set; }
         public string AccountName { get; set; }
+        public string GLSTicketDirect { get; set; }
 
         public override UInt16 Request
         {
-            get { return 1; }
+            get {return 1;}
         }
 
         public override byte[] Response 
@@ -36,7 +37,7 @@ namespace Protocol.SessionSetup
 
         // Server Data
 
-        public Synchronize() : base()
+        public Synchronize():base()
         {
 
         }
@@ -55,10 +56,16 @@ namespace Protocol.SessionSetup
                 UInt32 lenNextPart = ber.ReadUInt32();
 
                 UnknownA = ber.ReadUInt32();
-                UnknownB = ber.ReadUInt32();
+                HasGLSTicket = ber.ReadUInt32();
                 UInt32 timeStarted = ber.ReadUInt32();
 
                 AccountName = ber.ReadUnicodeString();
+
+                if (HasGLSTicket == 0x04)
+                {
+                    UInt32 remainingLength = ber.ReadUInt32();
+                    GLSTicketDirect = ber.ReadStringBE();
+                }
 
                 TimeSpan span = TimeSpan.FromSeconds(timeStarted);
                 LocalTimeStarted = new DateTime(1970, 1, 1).Add(span).ToLocalTime();

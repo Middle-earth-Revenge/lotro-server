@@ -10,7 +10,7 @@ using Protocol;
 using System.Collections;
 using Settings;
 using System.Threading;
-using Account;
+using AccountControl;
 using Helper;
 using Protocol.Server.Session;
 using System.Collections.Concurrent;
@@ -45,7 +45,7 @@ namespace Server
         public UInt32 packetNumberClient = 0;
 
         // for debug reason
-        //byte[] lastPacket; // if server responds to slow, you must handle packets which were received twice - reject them somehow
+        byte[] lastPacket; // if server responds to slow, you must handle packets which were received twice - reject them somehow
 
         public static UdpServer Instance
         {
@@ -113,11 +113,11 @@ namespace Server
 
             if (serverCreated)
             {
-                isRunning = false;
                 serverSocket.Shutdown(SocketShutdown.Both);
                 serverSocket.Close();
                 serverSocket.Dispose();
                 serverSocket = null;
+                isRunning = false;
             }
         }
 
@@ -196,7 +196,7 @@ namespace Server
                 socketPacket = (SocketObject)result.AsyncState;
                 socketPacket.Length = (UInt16)serverSocket.EndReceiveFrom(result, ref socketPacket.EndPoint);
 
-                Debug.WriteLineIf(Config.Instance.Debug, string.Format("Received {0} bytes from client (ip: " + socketPacket.EndPoint + ")", socketPacket.Length), DateTime.Now.ToString() + " " + this.GetType().Name + ".OnReceiveData");
+                //Debug.WriteLineIf(Config.Instance.Debug, string.Format("Received {0} bytes from client (ip: " + socketPacket.EndPoint + ")", socketPacket.Length), DateTime.Now.ToString() + " " + this.GetType().Name + ".OnReceiveData");
 
                 if (socketPacket.Length >= 13)  // Add received packet to receiver queue
                 {
@@ -228,7 +228,7 @@ namespace Server
 
                         if (socketPacket.Buffer[0] == 0x00 & socketPacket.Buffer[1] == 0x00)
                         {
-                            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, packetNumberClient + "_out-exception", rawPacket, rawPacket.Length, true);
+                            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, "exception-packet-" + packetNumberClient, rawPacket, rawPacket.Length, true);
                         }
                         else
                         {
@@ -236,7 +236,7 @@ namespace Server
 
                             byte[] decrypted = dp.generateDecryptedPacket(rawPacket, true);
 
-                            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, packetNumberClient + "_out-exception", decrypted, decrypted.Length, true);
+                            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, "exception-packet-" + packetNumberClient, decrypted, decrypted.Length, true);
                         }
                     }
 
@@ -279,15 +279,18 @@ namespace Server
 
         private void ReceiveData(object passedObject)
         {
-            try
+            //lock (threadLock) // for better debugging
             {
-                SocketObject socketObject = (SocketObject)passedObject;
-                PacketHandler packetHandler = new PacketHandler();
-                packetHandler.handleIncommingPacket(socketObject);
-            }
-            catch (InvalidCastException ice)
-            {
-                Debug.WriteLineIf(Config.Instance.Debug, ice.ToString(), DateTime.Now.ToString() + " " + this.GetType().Name + ".SendPacket");
+                try
+                {
+                    SocketObject socketObject = (SocketObject)passedObject;
+                    PacketHandler packetHandler = new PacketHandler();
+                    packetHandler.handleIncommingPacket(socketObject);
+                }
+                catch (InvalidCastException ice)
+                {
+                    Debug.WriteLineIf(Config.Instance.Debug, ice.ToString(), DateTime.Now.ToString() + " " + this.GetType().Name + ".SendPacket");
+                }
             }
         }
 

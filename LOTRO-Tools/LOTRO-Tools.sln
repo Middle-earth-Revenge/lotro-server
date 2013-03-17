@@ -15,9 +15,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "liblotro", "liblotro\liblot
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Settings", "Settings\Settings.csproj", "{96C97930-7D4F-4FDE-A140-EACB269B7407}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Account", "Account\Account.csproj", "{8A03452C-C66E-45B0-8AC2-1EBA0CDE68CA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AccountControl", "Account\AccountControl.csproj", "{8A03452C-C66E-45B0-8AC2-1EBA0CDE68CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client", "Client\Client.csproj", "{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SessionControl", "Client\SessionControl.csproj", "{6D64D7E8-1D2B-4FA7-A011-215F1BE95312}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protocol", "Protocol\Protocol.csproj", "{9DB4835F-A84F-4AE7-BE31-36BBC65B6A17}"
 EndProject

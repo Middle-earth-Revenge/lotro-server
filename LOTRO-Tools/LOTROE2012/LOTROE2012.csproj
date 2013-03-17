@@ -95,6 +95,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Accounts\admin.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Accounts\tammo.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

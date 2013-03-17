@@ -1,13 +1,27 @@
 ﻿using System;
 using System.Net;
+using AccountControl;
 
-namespace Account
+namespace SessionControl
 {
     public class Session
     {
+        public enum Status
+        {
+            AccountAlreadyConnected = 0x01, // 
+            AccountInvalid = 0x02, //  
+            ErrorRequestAccountInfo = 0x03, // 
+            RemovedBecauseAlreadyLogin = 0x04, // 
+            AccountServerNotReachable = 0x05, //  
+            ServerCrashed = 0x06, // 
+            AccountServerNotReachable2 = 0x07, // 
+            CharacterDroppedFromWorld = 0x08, // 
+        }
+
         public UInt16 ID { get; set; } // Session ID
         public string ClientVersion { get; set; } // e.g. 061004_netver:7249; didver:926CD8E3-2984-4CA9-9C6B-6DF2C8EB6BC3
-        public DateTime LocalTimeStarted { get; set; } // in payload data since 01.01.1970
+        public DateTime LocalTimeStarted { get; set; } // since 01.01.1970
+        public DateTime lastTimeAccessed { get; set; } // A worker thread must parse the session list for timed out (inactive) sessions to gain free id space
 
         public User UserObject { get; private set; }
         public EndPoint Endpoint { get; set; }
@@ -28,17 +42,17 @@ namespace Account
         private UInt32[] chksumTableServer = new UInt32[256];
         private UInt32[] chksumTableClient = new UInt32[256];
 
-
+        // to be implemented:
         // last ten received packets
         // last ten send to packets
-        // queue for merging packets which a fragmented
+        // queue for merging packets which are fragmented
 
         public Session(User userObject)
         {
             this.UserObject = userObject;
 
-            InitialChecksumServer = 0x97196156; // randomize in real
-            InitialChecksumClient = 0x9AF7CFD2; // randomize in real
+            InitialChecksumServer = 0x97196156; // randomize in real when a new client session should established
+            InitialChecksumClient = 0x9AF7CFD2; // randomize in real when a new client session should established
 
             checksumServer = new Helper.Checksum();
             chksumTableServer = checksumServer.generateInitialChecksumTable(InitialChecksumServer);
@@ -48,7 +62,8 @@ namespace Account
 
         }
 
-        // neccessary when in session
+        // neccessary when in session and sending a 06 packet
+        // 
         public UInt32 getServerPayloadChecksumXOR(UInt32 sequenceNr)
         {
             sequenceNr -= 2;
@@ -65,6 +80,7 @@ namespace Account
             return chksumTableServer[255 - (value)];
         }
 
+        // neccessary to validate client packet checksum
         public UInt32 getClientPayloadChecksumXOR(UInt32 sequenceNr)
         {
             sequenceNr -= 2;

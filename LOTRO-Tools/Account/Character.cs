@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Xml.Serialization;
 
-namespace Account
+namespace AccountControl
 {
     /// <summary>
     /// A single character to be used in the game

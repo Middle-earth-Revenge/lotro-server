@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <User xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
 	<AccountName>tammo</AccountName>
+	<GLSTicketDirect>1234567890</GLSTicketDirect>
 	<IPAddress>127.0.0.1</IPAddress>
-	<ServerName>[DE] Duesterwald</ServerName>
-	<Password>none</Password>
-  	<SessionTicket>none</SessionTicket>
+	<ServerName>\[DE\] Duesterwald</ServerName>
 </User>

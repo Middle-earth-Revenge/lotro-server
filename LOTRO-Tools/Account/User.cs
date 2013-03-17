@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
-namespace Account
+namespace AccountControl
 {
     /// <summary>
     /// An accounts used to login against the server. Consists of many Characters
@@ -26,11 +26,11 @@ namespace Account
         [XmlElement("AccountName")]
         public string AccountName { get; set; }
 
-        /// <summary>
-        /// Unused at this early stage of private server version
-        /// </summary>
-        [XmlElement("Password")]
-        public string Password { get; set; }
+        // not needed for this stage of private server version
+        [XmlElement("GLSTicketDirect")]
+        public string GLSTicketDirect { get; set; }
+
+        public string FoundGLSTicketDirect { get; set; }
 
         [XmlElement("IPAddress")]
         public string IPAddress { get; set; }
@@ -40,12 +40,6 @@ namespace Account
         /// </summary>
         [XmlElement("ServerName")]
         public string ServerName { get; set; }
-
-        /// <summary>
-        /// Unused at this early stage of private server version
-        /// </summary>
-        [XmlElement("SessionTicket")]
-        public string SessionTicket { get; set; }
 
         [XmlIgnore]
         public SortedList<string, Character> Characters { get; set; }

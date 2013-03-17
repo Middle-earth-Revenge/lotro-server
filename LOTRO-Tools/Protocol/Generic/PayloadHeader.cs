@@ -24,11 +24,9 @@ namespace Protocol.Generic
 
         public UInt32 SequenceNumber { get; set; }
 
-        public UInt32 HeaderChecksum { get; set; }
+        public UInt32 Checksum { get; set; }
 
         public UInt32 ACKNR { get; set; }
-
-        public UInt32 DataChecksum { get; set; }
 
         public UInt16 Length { get; set; }
 
@@ -47,7 +45,7 @@ namespace Protocol.Generic
                 this.DataLength = ber.ReadUInt16BE();
                 this.Action = ber.ReadBytes(4);
                 this.SequenceNumber = ber.ReadUInt32BE();
-                this.HeaderChecksum = ber.ReadUInt32BE();
+                this.Checksum = ber.ReadUInt32BE();
                 this.ACKNR = ber.ReadUInt32BE();
             }
             catch (EndOfStreamException eos)
@@ -77,12 +75,12 @@ namespace Protocol.Generic
             if(SequenceNumber == 0)
                 bw.Write((short)0x00);
 
-            bw.WriteUInt16BE(Settings.Config.Instance.ServerId); // ServerID
+            bw.WriteUInt16BE(0xf1);//Settings.Config.Instance.ServerID); // ServerID
             bw.WriteUInt16BE(DataLength); // Data part length
             bw.Write(Action); // ActionA
             //bw.WriteUInt16BE(ActionB); // ActionB
             bw.WriteUInt32BE(SequenceNumber); // Sequence number
-            bw.WriteUInt32BE(HeaderChecksum); // ChecksumA
+            bw.WriteUInt32BE(Checksum); // ChecksumA
             bw.WriteUInt32BE(ACKNR); // ChecksumB
 
             bw.Flush();
@@ -95,11 +93,11 @@ namespace Protocol.Generic
 
             UInt32 defaultHeaderChecksum = Helper.HelperMethods.Instance.getDefaultHeadChecksum(tempHeader);
 
-            UInt32 checksumFinal = DataChecksum ^ XOrValue;
+            UInt32 checksumFinal = Checksum ^ XOrValue;
 
             string xx = tempHeaderChecksum.ToString("x"); // 44188ef7
 
-            UInt32 checksumToAdd = DataChecksum + tempHeaderChecksum; // Calculated data checksum minus tempheader-checksum
+            UInt32 checksumToAdd = Checksum + tempHeaderChecksum; // Calculated data checksum minus tempheader-checksum
 
             string xy = checksumToAdd.ToString("x"); // 62b3518
 
@@ -123,23 +121,28 @@ namespace Protocol.Generic
 
         public byte[] Serialize(BEBinaryWriter beBinaryWriter)
         {
+            MemoryStream ms = (MemoryStream)beBinaryWriter.BaseStream;
+            ms.Position = 0;
+            ms.SetLength(0);
+
             beBinaryWriter.WriteUInt16BE(SessionID); // ServerID
             beBinaryWriter.WriteUInt16BE(DataLength); // Data part length
             beBinaryWriter.Write(Action); // ActionA
             beBinaryWriter.WriteUInt32BE(SequenceNumber); // Sequence number
             
             // Generate checksum value
-            UInt32 checksumToInsert = Helper.HelperMethods.Instance.generateChecksumForHeader(SessionID, DataLength, Action, SequenceNumber, DataChecksum, ACKNR);
+            UInt32 checksumToInsert = Helper.HelperMethods.Instance.generateChecksumForHeader(SessionID, DataLength, Action, SequenceNumber, Checksum, ACKNR);
 
             beBinaryWriter.WriteUInt32BE(checksumToInsert); // Checksum
             beBinaryWriter.WriteUInt32BE(ACKNR); // ChecksumB
             beBinaryWriter.Flush();
 
-            byte[] rawHeader = ((MemoryStream)beBinaryWriter.BaseStream).ToArray();
+            byte[] rawData = ms.ToArray();
 
-            beBinaryWriter.BaseStream.Position = 0;
+            ms.Position = 0;
+            ms.SetLength(0);
 
-            return rawHeader;
+            return rawData;
         }
 
         // Return: remaining bytes in packet (the data part) 
@@ -180,13 +183,15 @@ namespace Protocol.Generic
 
                 this.Action = ber.ReadBytes(4);
                 this.SequenceNumber = ber.ReadUInt32BE();
-                this.HeaderChecksum = ber.ReadUInt32BE();
+                this.Checksum = ber.ReadUInt32BE();
                 this.ACKNR = ber.ReadUInt32BE();
 
                 // Get Checksum for Header
                 ber.BaseStream.Position = Length - 0x14;
                 byte[] rawHeader = ber.ReadBytes(0x14);
-                DataChecksum = Helper.HelperMethods.Instance.getChecksumFromHeader(rawHeader);
+
+                // Data checksum
+                Checksum = Helper.HelperMethods.Instance.getChecksumFromHeader(rawHeader);
                 
 
                 rawDataPart = ber.ReadBytes(DataLength);

@@ -44,6 +44,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Data\ClientIP.cs" />
+    <Compile Include="Data\AccountName.cs" />
+    <Compile Include="Data\EncAccountName.cs" />
+    <Compile Include="Data\CharaData.cs" />
+    <Compile Include="Data\BadCharaName.cs" />
+    <Compile Include="Data\RecCharaData.cs" />
+    <Compile Include="Data\_00.cs" />
+    <Compile Include="Data\_00_01_D7.cs" />
+    <Compile Include="Data\_00_01_00_00.cs" />
+    <Compile Include="Data\ServerName.cs" />
+    <Compile Include="Data\_00_06_6B.cs" />
+    <Compile Include="Data\_00_78_66.cs" />
+    <Compile Include="Data\_00_01_D6_80.cs" />
+    <Compile Include="Data\_00_08.cs" />
+    <Compile Include="Data\NoGLSTicketDirect.cs" />
+    <Compile Include="Generic\PayloadSession.cs" />
+    <Compile Include="Generic\ObjectData.cs" />
+    <Compile Include="Generic\ObjectHeader.cs" />
+    <Compile Include="Generic\WrongChecksum.cs" />
+    <Compile Include="Header\_06_79.cs" />
+    <Compile Include="Header\_06_80_93.cs" />
+    <Compile Include="Header\_06_6C_80.cs" />
+    <Compile Include="Header\_06_54.cs" />
+    <Compile Include="Header\_06_80_F5.cs" />
+    <Compile Include="Header\_06_80_DD.cs" />
+    <Compile Include="Header\_06_43.cs" />
+    <Compile Include="Header\_06_80_AA.cs" />
+    <Compile Include="Header\_06_6D.cs" />
+    <Compile Include="Header\_06_81_49.cs" />
+    <Compile Include="Server\Session\WrongGLSTicket.cs" />
     <Compile Include="SessionSetup\Acknowledgment.cs" />
     <Compile Include="Generic\DataObject.cs" />
     <Compile Include="Generic\PayloadSessionInit.cs" />
@@ -59,7 +89,7 @@
     <Compile Include="Generic\PayloadData.cs" />
     <Compile Include="SessionSetup\OldClientVersion.cs" />
     <Compile Include="Client\Session\Terminate.cs" />
-    <Compile Include="_1ServerPacket\_1224.cs" />
+    <Compile Include="Session\MultiDataObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Settings\Settings.csproj">

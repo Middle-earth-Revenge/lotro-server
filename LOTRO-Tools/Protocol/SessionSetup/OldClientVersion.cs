@@ -11,16 +11,32 @@ namespace Protocol.SessionSetup
     public class OldClientVersion : PayloadData
     {
 
-        public override byte[] data
+       /* public override byte[] data
         {
             get { return new byte[] { 0x48, 0xE9, 0xA7, 0x00, 0x00, 0x00, 0x00, 0x00 }; }
-        }
+        }*/
 
         public override object Deserialize(BEBinaryReader ber)
         {
             // no need to read
 
             return this;
+        }
+
+        public override byte[] Serialize(BEBinaryWriter beBinaryWriter)
+        {
+            beBinaryWriter.Write(new byte[] { 0x48, 0xE9, 0xA7, 0x00, 0x00, 0x00, 0x00, 0x00 }); 
+
+            beBinaryWriter.Flush();
+
+            byte[] rawBytes = ((MemoryStream)beBinaryWriter.BaseStream).ToArray();
+
+            Length = (UInt16)rawBytes.Length;
+            Checksum = Helper.HelperMethods.Instance.getChecksumFromData(rawBytes);
+
+            beBinaryWriter.BaseStream.Position = 0;
+
+            return rawBytes;
         }
 
         public OldClientVersion()

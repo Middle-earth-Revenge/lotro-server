@@ -12,8 +12,10 @@ using System.Collections;
 
 namespace LOTROE2012
 {
+
     class Program
     {
+
         private ConsoleKeyInfo cki;
 
         static void Main(string[] args)
@@ -62,8 +64,6 @@ namespace LOTROE2012
             System.Console.WriteLine("* Debug: " + Settings.Config.Instance.Debug );
             System.Console.WriteLine("* Logfile: '" + System.IO.Directory.GetCurrentDirectory().ToString() + "\\" + Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.DebugLogFile + "'");
             System.Console.WriteLine("* Starting server [" + Settings.Config.Instance.ServerName + "] on port " + Settings.Config.Instance.ServerPort + "...");
-
-            
 
             bool isListening = Server.UdpServer.Instance.startServer();
 
