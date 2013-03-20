@@ -10,12 +10,11 @@ using LOTRO;
 
 namespace LOTROPacketCaptureAndAutoDecryption
 {
-    class Program : IDisposable
+    class Program
     {
 
         private IPAddress localIPAdress;
         private Decrypt decryptPacket;
-        private FileStream fsOutput;
 
 		private readonly string pathOutputDecryptedPackets = "decrypted_packets" + Path.DirectorySeparatorChar;
 		private readonly string pathOutputOriginalPackets = "original_packets" + Path.DirectorySeparatorChar;
@@ -26,7 +25,7 @@ namespace LOTROPacketCaptureAndAutoDecryption
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
 
             var udpPacket = UdpPacket.GetEncapsulated(packet);
-			if (udpPacket != null)
+            if (udpPacket != null)
             {
                 //DateTime time = e.Packet.Timeval.Date;
                 //int len = e.Packet.Data.Length;
@@ -47,26 +46,34 @@ namespace LOTROPacketCaptureAndAutoDecryption
                         // decrypt client packets
                         byte[] decryptedClientPacket = decryptPacket.GenerateDecryptedPacket(data, true);
 
-                        fsOutput = new FileStream(@pathOutputDecryptedPackets + packetCounter + "_client", FileMode.Create);
-                        fsOutput.Write(decryptedClientPacket, 0, decryptedClientPacket.Length);
-                        fsOutput.Close();
+                        using (FileStream fsOutput = new FileStream(@pathOutputDecryptedPackets + String.Format("{0,4:0000}", packetCounter) + "_client", FileMode.Create))
+                        {
+                            fsOutput.Write(decryptedClientPacket, 0, decryptedClientPacket.Length);
+                            fsOutput.Close();
+                        }
 
-                        fsOutput = new FileStream(pathOutputOriginalPackets + packetCounter + "_client", FileMode.Create);
-                        fsOutput.Write(data, 0, data.Length);
-                        fsOutput.Close();
+                        using (FileStream fsOutput = new FileStream(pathOutputOriginalPackets + String.Format("{0,4:0000}", packetCounter) + "_client", FileMode.Create))
+                        {
+                            fsOutput.Write(data, 0, data.Length);
+                            fsOutput.Close();
+                        }
                     }
                     else
                     {
                         // decrypt server packets
                         byte[] decryptedServerPacket = decryptPacket.GenerateDecryptedPacket(data, false);
 
-                        fsOutput = new FileStream(@pathOutputDecryptedPackets + packetCounter + "_server", FileMode.Create);
-                        fsOutput.Write(decryptedServerPacket, 0, decryptedServerPacket.Length);
-                        fsOutput.Close();
+                        using (FileStream fsOutput = new FileStream(@pathOutputDecryptedPackets + String.Format("{0,4:0000}", packetCounter) + "_server", FileMode.Create))
+                        {
+                            fsOutput.Write(decryptedServerPacket, 0, decryptedServerPacket.Length);
+                            fsOutput.Close();
+                        }
 
-                        fsOutput = new FileStream(pathOutputOriginalPackets + packetCounter + "_server", FileMode.Create);
-                        fsOutput.Write(data, 0, data.Length);
-                        fsOutput.Close();
+                        using (FileStream fsOutput = new FileStream(pathOutputOriginalPackets + String.Format("{0,4:0000}", packetCounter) + "_server", FileMode.Create))
+                        {
+                            fsOutput.Write(data, 0, data.Length);
+                            fsOutput.Close();
+                        }
                     }
 
                     packetCounter++;
@@ -87,6 +94,7 @@ namespace LOTROPacketCaptureAndAutoDecryption
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
                 {
                     localIP = ip;
+                    break;
                 }
             }
 
@@ -140,6 +148,9 @@ namespace LOTROPacketCaptureAndAutoDecryption
             string filter = "!broadcast and !multicast and udp and !port 53 and !port 59511 and !port 161 and !port 2900";
             device.Filter = filter;
 
+            Directory.CreateDirectory(prg.pathOutputDecryptedPackets);
+            Directory.CreateDirectory(prg.pathOutputOriginalPackets);
+
             // Start the capturing process
             device.StartCapture();
 
@@ -152,14 +163,6 @@ namespace LOTROPacketCaptureAndAutoDecryption
 
             // Close the pcap device
             device.Close();
-        }
-
-        public void Dispose()
-        {
-            if (fsOutput != null)
-            {
-                fsOutput.Dispose();
-            }
         }
     }
 }

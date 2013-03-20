@@ -40,7 +40,7 @@ namespace LOTRO
 		// false for a server packet
 		public byte[] GenerateDecryptedPacket(byte[] packet, bool isClientPacket)
 		{
-			byte[] tempResult = new byte[packet.Length * 4];
+			byte[] tempResult = new byte[packet.Length * 16];
 			int pos = 0;
 			startPosition = 4; // the first 4 Bits in the first block are skiped
 			lastIndex = 0;
@@ -48,13 +48,9 @@ namespace LOTRO
 			// Returns the final decrypted packet
 			byte[] decryptedPacket = null;
 
-			// First 2 Bytes are the same in the decrypted packet
-			byte firstByte = packet[0];
-			byte secondByte = packet[1];
-
-			// Write them to temp array
-			tempResult[0] = firstByte;
-			tempResult[1] = secondByte;
+			// First 2 Bytes are the same in the decrypted packet, Write them to temp array
+			tempResult[0] = packet[0];
+			tempResult[1] = packet[1];
 			pos = 2;
 
 			// Decrypt blocks of 4 Byte
@@ -97,12 +93,12 @@ namespace LOTRO
 		 * 3. Revers the order again (Example: 10000101010010011111010111101111 => 11110111101011111001001010100001)
 		 * 4. Parse the bit array:
 		 *
-		 *    if there is a 0, use the adress which is given in the first row an first column of the look-up-table
-		 *    if there is a 1, use the adress which is given in the first row an second column of the look-up-table
+		 *	if there is a 0, use the adress which is given in the first row an first column of the look-up-table
+		 *	if there is a 1, use the adress which is given in the first row an second column of the look-up-table
 		 *
-		 *    Jump to the row of the given adress in the look-up-table
+		 *	Jump to the row of the given adress in the look-up-table
 		 *
-		 *    Do this for all following bits in the array til you can't jump any further in this table and find a jump to the second look-up-table
+		 *	Do this for all following bits in the array til you can't jump any further in this table and find a jump to the second look-up-table
 		 * 5. Get the value which is given in the second look-up-table
 		 * 6. Start with 4 again til there are no bits left in the array
 		 */
