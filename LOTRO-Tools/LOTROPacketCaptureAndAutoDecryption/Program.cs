@@ -20,6 +20,12 @@ namespace LOTROPacketCaptureAndAutoDecryption
 		private readonly string pathOutputOriginalPackets = "original_packets" + Path.DirectorySeparatorChar;
         private Int32 packetCounter = 0;
 
+        public Program()
+        {
+            decryptPacket = new Decrypt();
+            localIPAdress = getLocalIp();
+        }
+
         private void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
             var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
@@ -31,64 +37,52 @@ namespace LOTROPacketCaptureAndAutoDecryption
                 //int len = e.Packet.Data.Length;
 
                 var ipPacket = (PacketDotNet.IpPacket)udpPacket.ParentPacket;
-                System.Net.IPAddress srcIp = ipPacket.SourceAddress;
-                //System.Net.IPAddress dstIp = ipPacket.DestinationAddress;
-                //int srcPort = udpPacket.SourcePort;
-                //int dstPort = udpPacket.DestinationPort;
 
                 byte[] data = udpPacket.PayloadData;
 
                 lock(this)
                 {
-
-                    if (srcIp.Equals(localIPAdress))
+                    //Console.WriteLine("SRC: " + localIPAdress + " vs. " + ipPacket.SourceAddress + ":" + udpPacket.SourcePort);
+                    //Console.WriteLine("DST: " + localIPAdress + " vs. " + ipPacket.DestinationAddress + ":" + udpPacket.DestinationPort);
+                    //Console.WriteLine();
+                    string postfix;
+                    bool isClientPacket;
+                    if (ipPacket.SourceAddress.Equals(localIPAdress))
                     {
-                        // decrypt client packets
-                        byte[] decryptedClientPacket = decryptPacket.GenerateDecryptedPacket(data, true);
-
-                        using (FileStream fsOutput = new FileStream(@pathOutputDecryptedPackets + String.Format("{0,4:0000}", packetCounter) + "_client", FileMode.Create))
-                        {
-                            fsOutput.Write(decryptedClientPacket, 0, decryptedClientPacket.Length);
-                            fsOutput.Close();
-                        }
-
-                        using (FileStream fsOutput = new FileStream(pathOutputOriginalPackets + String.Format("{0,4:0000}", packetCounter) + "_client", FileMode.Create))
-                        {
-                            fsOutput.Write(data, 0, data.Length);
-                            fsOutput.Close();
-                        }
+                        postfix = "_client";
+                        isClientPacket = true;
                     }
                     else
                     {
-                        // decrypt server packets
-                        byte[] decryptedServerPacket = decryptPacket.GenerateDecryptedPacket(data, false);
+                        postfix = "_server";
+                        isClientPacket = false;
+                    }
 
-                        using (FileStream fsOutput = new FileStream(@pathOutputDecryptedPackets + String.Format("{0,4:0000}", packetCounter) + "_server", FileMode.Create))
-                        {
-                            fsOutput.Write(decryptedServerPacket, 0, decryptedServerPacket.Length);
-                            fsOutput.Close();
-                        }
+                    // decrypt packets
+                    byte[] decryptedPacket = decryptPacket.GenerateDecryptedPacket(data, isClientPacket);
 
-                        using (FileStream fsOutput = new FileStream(pathOutputOriginalPackets + String.Format("{0,4:0000}", packetCounter) + "_server", FileMode.Create))
-                        {
-                            fsOutput.Write(data, 0, data.Length);
-                            fsOutput.Close();
-                        }
+                    using (FileStream fsOutput = new FileStream(@pathOutputDecryptedPackets + String.Format("{0,4:0000}", packetCounter) + postfix, FileMode.Create))
+                    {
+                        fsOutput.Write(decryptedPacket, 0, decryptedPacket.Length);
+                        fsOutput.Close();
+                    }
+
+                    using (FileStream fsOutput = new FileStream(pathOutputOriginalPackets + String.Format("{0,4:0000}", packetCounter) + postfix, FileMode.Create))
+                    {
+                        fsOutput.Write(data, 0, data.Length);
+                        fsOutput.Close();
                     }
 
                     packetCounter++;
-
                 }
             }
         }
 
         private IPAddress getLocalIp()
         {
-            IPHostEntry host;
-            //string localIP = "?";
             IPAddress localIP = null;
 
-            host = Dns.GetHostEntry(Dns.GetHostName());
+            IPHostEntry host = Dns.GetHostEntry(Dns.GetHostName());
             foreach (IPAddress ip in host.AddressList)
             {
                 if (ip.AddressFamily == AddressFamily.InterNetwork)
@@ -106,34 +100,41 @@ namespace LOTROPacketCaptureAndAutoDecryption
 
             Program prg = new Program();
 
-            prg.decryptPacket = new Decrypt();
-
-            prg.localIPAdress = prg.getLocalIp();
-
             // Retrieve the device list
             CaptureDeviceList devices = CaptureDeviceList.Instance;
 
+            ICaptureDevice device = null;
             if (devices.Count < 1)
             {
-                Console.WriteLine("No devices were found on this machine");
+                Console.WriteLine("No devices were found on this machine.");
                 return;
             }
-
-            Console.WriteLine("\nThe following devices are available on this machine. Please choose one:");
-            Console.WriteLine("----------------------------------------------------\n");
-
-            // Print out the available network devices
-            int i = 0;
-            foreach (ICaptureDevice dev in devices)
+            else if (devices.Count == 1)
             {
-                Console.WriteLine(i + ". {0}\n", dev);
-                i++;
+                device = devices[0];
+                Console.WriteLine(device);
             }
+            else
+            {
 
-            ConsoleKeyInfo c = Console.ReadKey();
+                Console.WriteLine("The following devices are available on this machine");
+                Console.WriteLine("---------------------------------------------------");
+                Console.WriteLine();
 
-            // Extract a device from the list
-            ICaptureDevice device = devices[Int32.Parse(c.KeyChar.ToString())]; // this is my device           
+                // Print out the available network devices
+                int i = 0;
+                foreach (ICaptureDevice dev in devices)
+                {
+                    Console.WriteLine("[{0}.]\n{1}", i, dev);
+                    i++;
+                }
+
+                Console.Write("Please choose one (0-{0}): ", (i-1));
+                ConsoleKeyInfo c = Console.ReadKey();
+
+                // Extract a device from the list
+                device = devices[Int32.Parse(c.KeyChar.ToString())]; // this is my device
+            }
 
             // Register our handler function to the
             // 'packet arrival' event
@@ -145,7 +146,7 @@ namespace LOTROPacketCaptureAndAutoDecryption
             device.Open(DeviceMode.Normal, readTimeoutMilliseconds);
 
             // port 2900 is chat server, don't want these packets
-            string filter = "!broadcast and !multicast and udp and !port 53 and !port 59511 and !port 161 and !port 2900";
+            string filter = "!broadcast and !multicast and udp and !port 53 and !port 59511 and !port 161 and !port 2900 and !port 5355";
             device.Filter = filter;
 
             Directory.CreateDirectory(prg.pathOutputDecryptedPackets);
