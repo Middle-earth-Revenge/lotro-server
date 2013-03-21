@@ -40,6 +40,20 @@ namespace LOTRO
 		// false for a server packet
 		public byte[] GenerateDecryptedPacket(byte[] packet, bool isClientPacket)
 		{
+            // If byte 3 contains a 0x00 the packet is not even encrypted. This may happen
+            // from time to time if the server decides to (e.g. when under load).
+            if (packet[3] == 0)
+            {
+                // We return a copied packet packet and not the same byte array. This way
+                // we make sure the caller isn't surprised when he modifies the returned
+                // byte array and his input magically changes as well (byte array are a
+                // reference type).
+                byte[] nonDecryptedPacket = new byte[packet.Length - 1];
+                Buffer.BlockCopy(packet, 0, nonDecryptedPacket, 0, 2);
+                Buffer.BlockCopy(packet, 3, nonDecryptedPacket, 2, packet.Length - 3);
+                return nonDecryptedPacket;
+            }
+
 			byte[] tempResult = new byte[packet.Length * 16];
 			int pos = 0;
 			startPosition = 4; // the first 4 Bits in the first block are skiped
