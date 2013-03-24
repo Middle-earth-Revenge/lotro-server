@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOTROendecrypt", "LOTROendecrypt\LOTROendecrypt.csproj", "{AA2C8FD2-54A6-4016-BC18-0A5C60B7BB3B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CreatePacketsFromWiresharkHexDump", "CreatePacketsFromWiresharkHexDump\CreatePacketsFromWiresharkHexDump.csproj", "{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Server", "Server\Server.csproj", "{80770937-969A-40F1-8FD1-FF9FC1021343}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LOTROendecryptClient", "LOTROendecryptClient\LOTROendecryptClient.csproj", "{6636BF97-0361-4AFF-BAF2-BEC426D9A61B}"
@@ -43,16 +41,6 @@ Global
 		{AA2C8FD2-54A6-4016-BC18-0A5C60B7BB3B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AA2C8FD2-54A6-4016-BC18-0A5C60B7BB3B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AA2C8FD2-54A6-4016-BC18-0A5C60B7BB3B}.Release|x86.ActiveCfg = Release|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{423AADBE-5CBB-4C78-A6D7-BEA398453C8A}.Release|x86.ActiveCfg = Release|Any CPU
 		{80770937-969A-40F1-8FD1-FF9FC1021343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{80770937-969A-40F1-8FD1-FF9FC1021343}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80770937-969A-40F1-8FD1-FF9FC1021343}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
