@@ -32,12 +32,12 @@
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="SharpPcap">
-      <HintPath>..\..\..\SharpPcap-4.2.0\Release\SharpPcap.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="PacketDotNet">
-      <HintPath>..\..\..\SharpPcap-4.2.0\Release\PacketDotNet.dll</HintPath>
+      <HintPath>..\PacketDotNet.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpPcap">
+      <HintPath>..\SharpPcap.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
