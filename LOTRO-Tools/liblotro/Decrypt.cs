@@ -40,17 +40,28 @@ namespace LOTRO
 		// false for a server packet
 		public byte[] GenerateDecryptedPacket(byte[] packet, bool isClientPacket)
 		{
-            // If the third byte contains a 0x00, the packet is not encrypted. This
-            // may happen from time to time if the server decides to (maybe when under
-            // heavy load).
-            //
-            // Also if the first two bytes are 0x00 no encryption has happened yet
-            if (packet[2] == 0 || (packet[0] == 0 && packet[1] == 0))
+            // If the first two bytes are 0x00 no encryption has happened yet
+            if (packet[0] == 0 && packet[1] == 0)
             {
                 // We return a copied packet packet and not the same byte array. This way
                 // we make sure the caller isn't surprised when he modifies the returned
                 // byte array and his input magically changes as well (byte array are a
-                // reference type).
+                // reference type). Next to that we skip the first two bytes which are
+                // basically padding
+                byte[] nonDecryptedPacket = new byte[packet.Length - 2];
+                Buffer.BlockCopy(packet, 2, nonDecryptedPacket, 0, packet.Length - 2);
+                return nonDecryptedPacket;
+            }
+
+            // Also if the third byte contains a 0x00, the packet is not encrypted. This
+            // may happen from time to time if the server decides to (maybe when under
+            // heavy load).
+            if (packet[2] == 0)
+            {
+                // We return a copied packet packet and not the same byte array. This way
+                // we make sure the caller isn't surprised when he modifies the returned
+                // byte array and his input magically changes as well (byte array are a
+                // reference type). We will skip the byte which is padding again.
                 byte[] nonDecryptedPacket = new byte[packet.Length - 1];
                 Buffer.BlockCopy(packet, 0, nonDecryptedPacket, 0, 2);
                 Buffer.BlockCopy(packet, 3, nonDecryptedPacket, 2, packet.Length - 3);
