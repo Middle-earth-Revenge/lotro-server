@@ -40,9 +40,12 @@ namespace LOTRO
 		// false for a server packet
 		public byte[] GenerateDecryptedPacket(byte[] packet, bool isClientPacket)
 		{
-            // If byte 3 contains a 0x00 the packet is not even encrypted. This may happen
-            // from time to time if the server decides to (e.g. when under load).
-            if (packet[3] == 0)
+            // If the third byte contains a 0x00, the packet is not encrypted. This
+            // may happen from time to time if the server decides to (maybe when under
+            // heavy load).
+            //
+            // Also if the first two bytes are 0x00 no encryption has happened yet
+            if (packet[2] == 0 || (packet[0] == 0 && packet[1] == 0))
             {
                 // We return a copied packet packet and not the same byte array. This way
                 // we make sure the caller isn't surprised when he modifies the returned
