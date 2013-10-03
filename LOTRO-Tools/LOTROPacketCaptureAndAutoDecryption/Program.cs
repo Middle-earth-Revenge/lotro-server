@@ -61,6 +61,8 @@ namespace LOTROPacketCaptureAndAutoDecryption
                     // decrypt packets
                     byte[] decryptedPacket = decryptPacket.GenerateDecryptedPacket(data, isClientPacket);
 
+                    postfix += "-" + BitConverter.ToString(decryptedPacket, 4, 4).Replace("-", "");
+
                     using (FileStream fsOutput = new FileStream(@pathOutputDecryptedPackets + String.Format("{0,4:0000}", packetCounter) + postfix, FileMode.Create))
                     {
                         fsOutput.Write(decryptedPacket, 0, decryptedPacket.Length);
