@@ -1,0 +1,32 @@
+version 1.3.2
+- Added Havok animation files (.hks) detection
+- Added application icon
+- Fixed minor bugs
+
+version 1.3.1
+- Fixed texture's width and height order
+- Fixed non-DXT texture's DDS headers
+
+version 1.3.0
+- All DXTX-compressed textures will be unpacked as .dds files correctly (thanks for the format to Sean K.)
+
+version 1.2.2
+- Rebuild for .Net 4.0 framework
+- Fixed minor bug with detecting jpg extension for Rise of Isengard maps
+
+version 1.2.1
+- Rebuild with restriction for 'x86' platforms because unpacker didn't work on 64bit Windows systems
+- Fixed possible minor application crash
+
+version 1.2
+- Added report generation
+- Added file dictionary for comparing file versions (see readme.txt for more description)
+
+version 1.1
+- Fixed memory leak
+- DXT1-compressed and uncompressed textures will be unpacked as .dds files
+- Rewritten unpacking method code
+- Added catalogs tree
+
+version 1.0
+- Initial release
