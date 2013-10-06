@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Sockets;
 using Helper;
 using System.Collections;
+using System.Reflection;
 
 
 
@@ -15,16 +16,12 @@ namespace LOTROE2012
 
     class Program
     {
-
-        private ConsoleKeyInfo cki;
-
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
             Console.Clear();
             Console.TreatControlCAsInput = true;
 
-            bool configFound = false;
-
+            // Check if the programm was called properly
             if (args.Length == 0)
             {
                 Console.WriteLine("Missing config file name!");
@@ -37,6 +34,7 @@ namespace LOTROE2012
                 Environment.Exit(1);
             }
 
+            // Check if the passed file exists (we assume that it's a file and readable)
             if (!File.Exists(args[0]))
             {
                 Console.WriteLine("Config file {0} not found!", args[0]);
@@ -44,66 +42,64 @@ namespace LOTROE2012
                 Environment.Exit(2);
             }
 
+            // Load the config.xml into Settings.Config.Instance
             Settings.ConfigHandler configHandler = new Settings.ConfigHandler();
             configHandler.readConfig(args[0]);
 
+            // Verify the config.xml was valid
+            if (Settings.Config.Instance == null)
+            {
+                Console.WriteLine("Could not start server. There is a problem reading the config file {0}.", args[0]);
+                Console.ReadKey(true);
+                Environment.Exit(3);
+            }
+
+            // Give some basic information
+            Console.WriteLine("{0} {1}", Assembly.GetEntryAssembly().GetName().Name, Assembly.GetEntryAssembly().GetName().Version);
+            Console.WriteLine();
+            Console.WriteLine("* Debug logging: {0}", Settings.Config.Instance.Debug);
+            Console.WriteLine("* Logfile: '{0}\\{1}\\{2}'", System.IO.Directory.GetCurrentDirectory().ToString(), Settings.Config.Instance.LogFolder, Settings.Config.Instance.DebugLogFile);
+            Console.WriteLine("* Starting server '{0}' on port {1}", Settings.Config.Instance.ServerName, Settings.Config.Instance.ServerPort + "...");
+
+            // Set up the debugger. From now on no more calls to System.Console for debugging output!
             if (Settings.Config.Instance.Debug)
             {
-                TextWriterTraceListener tr1 = new TextWriterTraceListener(System.Console.Out);
-                Debug.Listeners.Add(tr1);
+                TextWriterTraceListener listener1 = new TextWriterTraceListener(System.Console.Out);
+                Debug.Listeners.Add(listener1);
 
-                TextWriterTraceListener tr2 = new TextWriterTraceListener(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.DebugLogFile);
-                Debug.Listeners.Add(tr2);
+                TextWriterTraceListener listener2 = new TextWriterTraceListener(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.DebugLogFile);
+                Debug.Listeners.Add(listener2);
             }
 
-            Program prg = new Program();
-
-            if (Settings.Config.Instance != null)
-                configFound = true;
-
-            if (!configFound)
-            {
-                System.Console.WriteLine("\r\nCould not start server. There is a problem with the config file.");
-                Console.ReadKey(true);
-                Environment.Exit(0);
-            }
-
-            System.Console.WriteLine("* Debug: " + Settings.Config.Instance.Debug );
-            System.Console.WriteLine("* Logfile: '" + System.IO.Directory.GetCurrentDirectory().ToString() + "\\" + Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.DebugLogFile + "'");
-            System.Console.WriteLine("* Starting server [" + Settings.Config.Instance.ServerName + "] on port " + Settings.Config.Instance.ServerPort + "...");
 
             bool isListening = Server.UdpServer.Instance.startServer();
-
-            
-
             if (isListening)
             {
-                System.Console.WriteLine("* [" + Settings.Config.Instance.ServerName + "] is now listening @ " + Server.UdpServer.Instance.ServerAddress + "...");
-                System.Console.WriteLine("\r\nExit server with CTRL+X...");
-                System.Console.WriteLine();
+                Console.WriteLine("* Started '" + Settings.Config.Instance.ServerName + "'  is now listening...");
+                Console.WriteLine();
+                Console.WriteLine("Exit server with CTRL+X...");
+                Console.WriteLine();
 
-                Debug.WriteLineIf(Settings.Config.Instance.Debug, "Server running", DateTime.Now.ToString() + " " + prg.GetType().Name + ".Main");
+                Debug.WriteLineIf(Settings.Config.Instance.Debug, "Server running", DateTime.Now.ToString() + " " + "Program.Main");
 
                 bool noCTRLC = true;
-
                 while (noCTRLC)
                 {
-                    prg.cki = Console.ReadKey(true);
-
-                    if (prg.cki.Modifiers == ConsoleModifiers.Control && prg.cki.Key == ConsoleKey.X)
+                    ConsoleKeyInfo cki = Console.ReadKey(true);
+                    if (cki.Modifiers == ConsoleModifiers.Control && cki.Key == ConsoleKey.X)
                     {
                         Server.UdpServer.Instance.stopServer();
                         noCTRLC = false;
 
-                        System.Console.WriteLine("Server stopped...");
-                        System.Console.WriteLine("Exit.");
+                        Console.WriteLine("Server stopped...");
+                        Console.WriteLine("Exiting.");
                     }
                 }
             }
             else
             {
-                System.Console.WriteLine("Something went wrong...");
-                System.Console.WriteLine("Exit.");
+                Console.WriteLine("Something went wrong...");
+                Console.WriteLine("Exiting.");
             }
 
             Debug.Close();
