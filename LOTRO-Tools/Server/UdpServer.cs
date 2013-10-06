@@ -17,15 +17,6 @@ using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using Protocol.SessionSetup;
 
-/*
- * (c) 2013 tAmMo
- * 
- * 
- * 
- * 
-*/
-
-
 namespace Server
 {
     public sealed class UdpServer
@@ -37,15 +28,12 @@ namespace Server
 
         private Socket serverSocket;
 
-        private BlockingCollection<SocketObject> receiveQueue = null;
-        private BlockingCollection<SocketObject> sendQueue = null;
+        private BlockingCollection<SocketObject> receiveQueue = new BlockingCollection<SocketObject>();
+        private BlockingCollection<SocketObject> sendQueue = new BlockingCollection<SocketObject>();
 
         private bool isRunning = false;
 
         public UInt32 packetNumberClient = 0;
-
-        // for debug reason
-        byte[] lastPacket; // if server responds to slow, you must handle packets which were received twice - reject them somehow
 
         public static UdpServer Instance
         {
@@ -67,58 +55,34 @@ namespace Server
 
         }
 
-        private UdpServer()
-        {
-            //ThreadPool.SetMinThreads(50, 50);
-            receiveQueue = new BlockingCollection<SocketObject>();
-            sendQueue = new BlockingCollection<SocketObject>();
-
-        }
-
-        public string ServerAddress
-        {
-            get { return this.serverSocket.LocalEndPoint.ToString(); }
-        }
-
         public bool startServer()
         {
-            bool serverCreated = instance != null ? true : false;
+            isRunning = openReceiverSocket(Config.Instance.ServerPort);
 
-            if (serverCreated)
-            {
-                isRunning = openReceiverSocket(Config.Instance.ServerPort);
+            Thread sendWorker = new Thread(startSendQueue);
+            sendWorker.IsBackground = true;
+            sendWorker.Priority = ThreadPriority.Normal;
+            sendWorker.Name = "sendWorker";
+            sendWorker.Start();
 
-                Thread sendWorker = new Thread(startSendQueue);
-                sendWorker.IsBackground = true;
-                sendWorker.Priority = ThreadPriority.Normal;
-                sendWorker.Name = "sendWorker";
-                sendWorker.Start();
+            Thread receiveWorker = new Thread(startReceiveQueue);
+            receiveWorker.IsBackground = true;
+            receiveWorker.Priority = ThreadPriority.Highest;
+            receiveWorker.Name = "receiveWorker";
+            receiveWorker.Start();
 
-                Thread receiveWorker = new Thread(startReceiveQueue);
-                receiveWorker.IsBackground = true;
-                receiveWorker.Priority = ThreadPriority.Highest;
-                receiveWorker.Name = "receiveWorker";
-                receiveWorker.Start();
-
-                listenForData();
-                return isRunning;
-            }
-
-            return false;
+            listenForData();
+            return isRunning;
         }
 
         public void stopServer()
         {
-            bool serverCreated = instance != null ? true : false;
+            isRunning = false;
 
-            if (serverCreated)
-            {
-                serverSocket.Shutdown(SocketShutdown.Both);
-                serverSocket.Close();
-                serverSocket.Dispose();
-                serverSocket = null;
-                isRunning = false;
-            }
+            serverSocket.Shutdown(SocketShutdown.Both);
+            serverSocket.Close();
+            serverSocket.Dispose();
+            serverSocket = null;
         }
 
         private void startReceiveQueue()
@@ -143,25 +107,17 @@ namespace Server
 
         private bool openReceiverSocket(UInt16 port)
         {
-            bool binded = false;
-
             try
             {
-
-                IPAddress serverIP = IPAddress.Parse("127.0.0.1"); // for local use only atm
-
-                IPEndPoint receiverEndPoint = new IPEndPoint(serverIP, port);
                 serverSocket = new Socket(AddressFamily.InterNetwork, SocketType.Dgram, ProtocolType.Udp);
-
                 serverSocket.SetSocketOption(SocketOptionLevel.Socket, SocketOptionName.ReuseAddress, true);
-
                 //serverSocket.SetSocketOption(SocketOptionLevel.Udp, SocketOptionName.NoDelay, false);
-
                 serverSocket.Poll(4000, SelectMode.SelectRead);
 
+                IPEndPoint receiverEndPoint = new IPEndPoint(IPAddress.Any, port);
                 serverSocket.Bind(receiverEndPoint);
 
-                binded = true;
+                return true;
 
             }
             catch (Exception e)
@@ -169,7 +125,7 @@ namespace Server
                 Debug.WriteLineIf(Config.Instance.Debug, e.Message, DateTime.Now.ToString() + " " + this.GetType().Name + ".OpenReceiverSocket");
             }
 
-            return binded;
+            return false;
         }
 
         private void listenForData()
