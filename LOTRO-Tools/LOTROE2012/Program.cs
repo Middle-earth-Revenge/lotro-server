@@ -27,12 +27,12 @@ namespace LOTROE2012
 
             if (args.Length == 0)
             {
-                System.Console.WriteLine("Missing config file name!");
-                System.Console.WriteLine("Please start the server with a valid config file.");
-                System.Console.WriteLine();
-                System.Console.WriteLine("LOTRO-SE.exe {config file}");
-                System.Console.WriteLine();
-                System.Console.WriteLine("e.g. > LOTRO-SE.exe config.xml");
+                Console.WriteLine("Missing config file name!");
+                Console.WriteLine("Please start the server with a valid config file.");
+                Console.WriteLine();
+                Console.WriteLine("LOTRO-SE.exe {config file}");
+                Console.WriteLine();
+                Console.WriteLine("e.g. > LOTRO-SE.exe config.xml");
                 Console.ReadKey(true);
                 Environment.Exit(0);
             }
