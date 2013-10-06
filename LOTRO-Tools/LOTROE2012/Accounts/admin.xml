@@ -1,7 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<User xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-	<AccountName>admin</AccountName>
-  <GLSTicketDirect>xxx</GLSTicketDirect>
-	<IPAddress>192.168.0.22</IPAddress>
-	<ServerName>\[DE\] Adminwood</ServerName>
-</User>
