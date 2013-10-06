@@ -118,11 +118,10 @@ namespace Server
                 serverSocket.Bind(receiverEndPoint);
 
                 return true;
-
             }
             catch (Exception e)
             {
-                Debug.WriteLineIf(Config.Instance.Debug, e.Message, DateTime.Now.ToString() + " " + this.GetType().Name + ".OpenReceiverSocket");
+                Debug.WriteLineIf(Config.Instance.Debug, e.Message, DateTime.Now.ToString() + " " + this.GetType().Name + ".openReceiverSocket");
             }
 
             return false;
@@ -138,7 +137,7 @@ namespace Server
             }
             catch (Exception e)
             {
-                Debug.WriteLineIf(Config.Instance.Debug, "BeginReceiveFrom error: " + e.Message, DateTime.Now.ToString() + " " + this.GetType().Name + ".ListenForData");
+                Debug.WriteLineIf(Config.Instance.Debug, "BeginReceiveFrom error: " + e.Message, DateTime.Now.ToString() + " " + this.GetType().Name + ".listenForData");
             }
 
         }
@@ -198,7 +197,7 @@ namespace Server
 
 
                 }
-            } //end try
+            }
 
             packetNumberClient++;
             listenForData();

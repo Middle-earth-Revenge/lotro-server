@@ -16,7 +16,7 @@ namespace Server
 {
     public class SetupHandler
     {
-        public Payload process(SocketObject socketObject, BEBinaryReader beBinaryReader)
+        public static Payload process(SocketObject socketObject, BEBinaryReader beBinaryReader)
         {
             Payload payload = new PayloadSessionInit();
             payload.Deserialize(beBinaryReader);
@@ -459,7 +459,7 @@ namespace Server
             return payload;
         }
 
-        private void handleOutgoingPacket(SocketObject socketObject, Payload payload)
+        private static void handleOutgoingPacket(SocketObject socketObject, Payload payload)
         {
             MemoryStream memoryStreamOutput = new MemoryStream();
             BEBinaryWriter beBinaryWriter = new BEBinaryWriter(memoryStreamOutput, System.Text.Encoding.UTF8);

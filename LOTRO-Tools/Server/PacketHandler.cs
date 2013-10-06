@@ -24,13 +24,13 @@ namespace Server
             Payload payload = null;
 
             UInt16 sessionID = beBinaryReader.ReadUInt16BE();
+            beBinaryReader.BaseStream.Position = 0;
 
             if (sessionID == 0x00) // Session setup payload
             {
                 //Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, "received-" + Server.UdpServer.Instance.packetNumberClient, socketObject.Buffer, socketObject.Length, true);
 
-                SetupHandler setupHandler = new SetupHandler();
-                payload = setupHandler.process(socketObject, beBinaryReader);
+                payload = SetupHandler.process(socketObject, beBinaryReader);
 
                 //if(payload != null)
                 //    Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, payload.Data.GetType().Name + Server.UdpServer.Instance.packetNumberClient, socketObject.Buffer, socketObject.Length, true);               
