@@ -23,6 +23,6 @@ namespace Protocol.Generic
 
         public abstract Payload Deserialize(BEBinaryReader ber);
 
-        public abstract byte[] Serialize(BEBinaryWriter bew);
+        public abstract byte[] Serialize(BEBinaryWriter bew, int dumpCounter);
     }
 }

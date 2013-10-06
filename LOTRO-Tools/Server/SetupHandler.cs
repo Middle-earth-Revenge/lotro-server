@@ -86,9 +86,7 @@ namespace Server
                     session.SequenceNumberClient = 0x02;
                     session.ACKNRServer += 0x00010000;
 
-                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] successful authenticated.", DateTime.Now.ToString() + " ");
-
-
+                    Debug.WriteLineIf(Config.Instance.Debug, "Client session [" + payload.Header.SessionID + "] successful authenticated.", DateTime.Now.ToString() + " SetupHandler.process");
 
                     // this part has to be moved to client session with his own "handler" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     // each client sesseion is responsible for his own packets
@@ -440,6 +438,8 @@ namespace Server
                     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 }
+
+                return;
             }
 
             // are there more cases?

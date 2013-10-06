@@ -2,6 +2,7 @@
 using Helper;
 using System.IO;
 using System.Diagnostics;
+using System.Text;
 
 namespace Protocol.Generic
 {
@@ -13,7 +14,27 @@ namespace Protocol.Generic
             
         }
 
-        public override byte[] Serialize(BEBinaryWriter bew)
+        public static string ToString(byte[] packet)
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+            foreach (byte b in packet)
+            {
+                sb.AppendFormat("{0:x2}", b);
+                count++;
+                if (count % 2 == 0)
+                {
+                    sb.Append(' ');
+                }
+                if (count % 16 == 0 && count != packet.Length)
+                {
+                    sb.Append("\r\n");
+                }
+            }
+            return sb.ToString();
+        }
+
+        public override byte[] Serialize(BEBinaryWriter bew, int dumpCounter)
         {
             MemoryStream ms = (MemoryStream)bew.BaseStream;
             ms.Position = 0;
@@ -37,26 +58,14 @@ namespace Protocol.Generic
 
             bew.Flush();
 
-            byte[] rawData = ms.ToArray();
+            byte[] data = ms.ToArray();
 
-            //Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, DateTime.Now.ToLongTimeString().Replace(':','-') + "-unenc-send" , rawData, rawData.Length, true);
+            string postfix = BitConverter.ToString(data, 4, 4).Replace("-", "");
 
-            FileStream fs = null;
-
-            fs = new FileStream(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder + "\\" + DateTime.Now.Ticks + "-unenc-send", FileMode.Create);
-
-
-            fs.Write(rawData, 0, rawData.Length);
-            fs.Flush();
-            fs.Close();
-            fs = null;
-            
-
+            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, String.Format("{0,4:0000}", dumpCounter++) + "_server-" + postfix, new System.Text.UTF8Encoding().GetBytes(ToString(data)), new System.Text.UTF8Encoding().GetBytes(ToString(data)).Length, true);
 
             Encrypt ep = new Encrypt();
-            rawData = ep.generateEncryptedPacket(rawData, false);
-
-            return rawData;
+            return ep.generateEncryptedPacket(data, false);
         }
 
         public override Payload Deserialize(BEBinaryReader ber)

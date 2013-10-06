@@ -2,6 +2,7 @@
 using Helper;
 using System.IO;
 using System.Diagnostics;
+using System.Text;
 
 namespace Protocol.Generic
 {
@@ -11,7 +12,27 @@ namespace Protocol.Generic
         {
         }
 
-        public override byte[] Serialize(BEBinaryWriter bew)
+        public static string ToString(byte[] packet)
+        {
+            StringBuilder sb = new StringBuilder();
+            int count = 0;
+            foreach (byte b in packet)
+            {
+                sb.AppendFormat("{0:x2}", b);
+                count++;
+                if (count % 2 == 0)
+                {
+                    sb.Append(' ');
+                }
+                if (count % 16 == 0 && count != packet.Length)
+                {
+                    sb.Append("\r\n");
+                }
+            }
+            return sb.ToString();
+        }
+
+        public override byte[] Serialize(BEBinaryWriter bew, int dumpCounter)
         {
             byte[] rawPayloadData = Data.Serialize(bew);
 
@@ -27,7 +48,16 @@ namespace Protocol.Generic
 
             bew.Flush();
 
-            return ((MemoryStream)bew.BaseStream).ToArray();
+            byte[] data = ((MemoryStream)bew.BaseStream).ToArray();
+
+            byte[] dumpData = new byte[data.Length - 2];
+            Buffer.BlockCopy(data, 2, dumpData, 0, data.Length - 2);
+
+            string postfix = BitConverter.ToString(dumpData, 4, 4).Replace("-", "");
+
+            Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, String.Format("{0,4:0000}", dumpCounter++) + "_server-" + postfix, new System.Text.UTF8Encoding().GetBytes(ToString(dumpData)), new System.Text.UTF8Encoding().GetBytes(ToString(dumpData)).Length, true);
+
+            return data;
         }
 
         public override Payload Deserialize(BEBinaryReader ber)

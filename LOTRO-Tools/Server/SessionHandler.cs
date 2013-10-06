@@ -22,9 +22,7 @@ namespace Server
                 return;
             }
 
-            // Decrypt and process
-            DecryptPacket dp = new DecryptPacket();
-            beBinaryReader = dp.decryptClientPacket(beBinaryReader, sessionID); // afterwards readers base stream is now decrypted
+       
 
             byte[] gg = beBinaryReader.ReadBytes(999);
 
@@ -33,8 +31,6 @@ namespace Server
             Payload payload = null;
             if (gg[7] == 0x06)
             {
-                Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, "data-" + Server.UdpServer.Instance.packetNumberClient, gg, gg.Length, true);
-
                 // not generic enough, get's not every packet
                 if (gg[0x14] == 0x01 && gg[0x15] == 0x00 && gg[0x16] == 0x01 && gg[0x17] == 0x04 && session.UserObject.AccountName.Equals("admin"))
                 {
