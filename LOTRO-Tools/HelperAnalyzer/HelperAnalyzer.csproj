@@ -54,6 +54,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="BEBinaryReaderTests.cs" />
+    <Compile Include="BEBinaryWriterTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Choose>
