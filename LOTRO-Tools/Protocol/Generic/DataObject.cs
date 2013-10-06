@@ -50,7 +50,7 @@ namespace Protocol.Generic
             Checksum = Helper.HelperMethods.Instance.getChecksumFromData(data);
 
             ms.Position = endHeader - Header.ident.Length;
-            beBinaryWriter.WriteUInt16BEX((UInt16)data.Length);
+            beBinaryWriter.WriteUInt16BE((UInt16)data.Length);
 
             byte[] header = getRawData((int)startHeader, (int)endHeader, ms);
             Checksum += Helper.HelperMethods.Instance.getChecksumFromData(header);
