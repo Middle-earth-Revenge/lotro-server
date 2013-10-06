@@ -13,8 +13,6 @@ namespace Protocol.SessionSetup
     {
         // Client Data
 
-        private UInt32 chksum = 0; // implement later for checksum check client packet
-
         public string ClientVersion {get; set;}
         public DateTime LocalTimeStarted { get; set; }
         public UInt32 UnknownA { get; set; }

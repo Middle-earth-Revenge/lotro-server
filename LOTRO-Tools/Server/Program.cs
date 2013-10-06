@@ -71,6 +71,8 @@ namespace LOTROE2012
                 Debug.Listeners.Add(listener2);
             }
 
+            // Test the Helper works
+            Helper.HelperMethods.Instance.GetHashCode();
 
             bool isListening = Server.UdpServer.Instance.startServer();
             if (isListening)

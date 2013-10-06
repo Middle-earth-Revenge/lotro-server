@@ -7,13 +7,8 @@ namespace Protocol.Generic
 {
     public class PayloadSessionInit: Payload
     {
-
-        //private BEBinaryReader ber = null;
-
-        public PayloadSessionInit()
-            : base()
+        public PayloadSessionInit() : base()
         {
-            
         }
 
         public override byte[] Serialize(BEBinaryWriter bew)
@@ -37,11 +32,13 @@ namespace Protocol.Generic
 
         public override Payload Deserialize(BEBinaryReader ber)
         {
-            Header = deserializeHeader(ber);         
+            Header = new PayloadHeader();
+            Header.Deserialize(ber);
 
-            if (validateChecksum(ber))
+            if (validateChecksum(ber, Header))
             {
-                Data = deserializeData(ber);
+                Data = new ProtocolHandler().getPayloadSessionInit(Header.Action[1]);
+                Data = (PayloadData)Data.Deserialize(ber);
             }
             else
             {
@@ -52,23 +49,7 @@ namespace Protocol.Generic
             return this;
         }
 
-        private PayloadHeader deserializeHeader(BEBinaryReader ber)
-        {
-            Header = new PayloadHeader();
-            Header.Deserialize(ber);
-
-            return Header;
-        }
-
-        private PayloadData deserializeData(BEBinaryReader ber)
-        {
-            Data = new ProtocolHandler().getPayloadSessionInit(Header.Action[1]);
-            Data = (PayloadData)Data.Deserialize(ber);
-
-            return Data;
-        }
-
-        private bool validateChecksum(BEBinaryReader ber)
+        private static bool validateChecksum(BEBinaryReader ber, PayloadHeader Header)
         {
             long tempPosition = ber.BaseStream.Position;
 
@@ -78,7 +59,10 @@ namespace Protocol.Generic
             Helper.Checksum chksum = new Checksum();
             UInt32 checksumData = chksum.generateChecksumFromData(data);
 
-            UInt32 checksumHead = Helper.HelperMethods.Instance.generateChecksumForHeader(Header.SessionID, Header.DataLength, Header.Action, Header.SequenceNumber, checksumData, Header.ACKNR);
+            // XXX WOW, this is just great! Calling this method reveses the Header.Action field ...
+            byte[] actionCopy = new byte[Header.Action.Length];
+            Buffer.BlockCopy(Header.Action, 0, actionCopy, 0, Header.Action.Length);
+            UInt32 checksumHead = Helper.HelperMethods.Instance.generateChecksumForHeader(Header.SessionID, Header.DataLength, actionCopy /*Header.Action*/, Header.SequenceNumber, checksumData, Header.ACKNR);
 
             ber.BaseStream.Position = tempPosition;
 

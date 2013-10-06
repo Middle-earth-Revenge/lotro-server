@@ -1,35 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Helper;
 using Protocol.Generic;
-using System.Diagnostics;
-using Settings;
-using Helper;
 using Protocol.SessionSetup;
-using AccountControl;
-using System.IO;
 using SessionControl;
-using System.Threading;
+using Settings;
+using System;
+using System.Diagnostics;
+using System.IO;
 
 namespace Server
 {
     public class SetupHandler
     {
-        public static Payload process(SocketObject socketObject, BEBinaryReader beBinaryReader)
+        public static void process(SocketObject socketObject, BEBinaryReader beBinaryReader)
         {
+            // Try to initialize the packet
             Payload payload = new PayloadSessionInit();
             payload.Deserialize(beBinaryReader);
 
             if (payload.Data is Protocol.Generic.WrongChecksum) // (first checksum check)
             {
-                return null; // normally request packet because of failed checksum, but not at session setup
+                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") WrongChecksum received", DateTime.Now.ToString() + " SetupHandler.process");
+                return; // normally request packet because of failed checksum, but not at session setup
             }
-
 
             if (payload.Data is Protocol.SessionSetup.Synchronize) // (first client packet)
             {
-                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") Synchronize received", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
+                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") Synchronize received", DateTime.Now.ToString() + " SetupHandler.process");
 
                 Protocol.SessionSetup.Synchronize synchronize = (Protocol.SessionSetup.Synchronize)payload.Data;
 
@@ -37,7 +33,7 @@ namespace Server
                 if (!synchronize.ClientVersion.Equals(Config.Instance.RequiredClientVersion))
                 {
                     // Client version does not match expected server version (either to new or to old client)
-                    Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") has old client version: " + synchronize.ClientVersion + ", expected: " + Config.Instance.RequiredClientVersion, DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
+                    Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") has old client version: " + synchronize.ClientVersion + ", expected: " + Config.Instance.RequiredClientVersion, DateTime.Now.ToString() + " SetupHandler.process");
 
                     OldClientVersion oldClientVersion = new OldClientVersion();
                     payload.Data = oldClientVersion;
@@ -64,18 +60,18 @@ namespace Server
                         payload.Header.SessionID = Config.Instance.ServerId;
                         payload.Header.ACKNR = session.ACKNRServer;
 
-                        Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") now uses session id [" + session.ID + "]", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
+                        Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") now uses session id [" + session.ID + "]", DateTime.Now.ToString() + " SetupHandler.process");
                     }
-                    // else "server is full" packet
                 }
 
                 handleOutgoingPacket(socketObject, payload); // 2nd server packet send
+                return;
 
-            } // Synchronize
+            }
 
             if (payload.Data is Protocol.SessionSetup.Acknowledgment) // (second client packet)
             {
-                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") Acknowledgment received", DateTime.Now.ToString() + " " + this.GetType().Name + ".process");
+                Debug.WriteLineIf(Config.Instance.Debug, "Client (ip: " + socketObject.EndPoint + ") Acknowledgment received", DateTime.Now.ToString() + " SetupHandler.process");
 
                 Protocol.SessionSetup.Acknowledgment acknowledgment = (Protocol.SessionSetup.Acknowledgment)payload.Data;
 
@@ -444,19 +440,11 @@ namespace Server
                     ////////////////////////////////////////////////////////////////////////////////////////////////////
 
                 }
-                else
-                {
-                    payload = null;
-                }
-
-                
-
-
             }
 
             // are there more cases?
 
-            return payload;
+            Debug.WriteLineIf(Config.Instance.Debug, "Invalid packet received", DateTime.Now.ToString() + " SetupHandler.process");
         }
 
         private static void handleOutgoingPacket(SocketObject socketObject, Payload payload)
