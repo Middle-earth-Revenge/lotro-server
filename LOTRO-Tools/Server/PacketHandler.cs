@@ -15,18 +15,11 @@ namespace Server
 {
     class PacketHandler
     {
-        MemoryStream memoryStreamInput = null;
-        BEBinaryReader beBinaryReader = null;
-        MemoryStream memoryStreamOutput = null;
-        BEBinaryWriter beBinaryWriter = null;
-
         public void handleIncommingPacket(SocketObject socketObject)
         {
-            memoryStreamInput = new MemoryStream(socketObject.Buffer, 0, socketObject.Length);
-            beBinaryReader = new BEBinaryReader(memoryStreamInput, System.Text.Encoding.UTF8);
-
-            memoryStreamOutput = new MemoryStream();
-            beBinaryWriter = new BEBinaryWriter(memoryStreamOutput, System.Text.Encoding.UTF8);
+            // First of all: create the reader for the incoming packet
+            MemoryStream memoryStreamInput = new MemoryStream(socketObject.Buffer, 0, socketObject.Length);
+            BEBinaryReader beBinaryReader = new BEBinaryReader(memoryStreamInput, System.Text.Encoding.UTF8);
 
             Payload payload = null;
 
@@ -144,6 +137,9 @@ namespace Server
         {
             if (payload != null)
             {
+                MemoryStream memoryStreamOutput = new MemoryStream();
+                BEBinaryWriter beBinaryWriter = new BEBinaryWriter(memoryStreamOutput, System.Text.Encoding.UTF8);
+
                 socketObject.Buffer = payload.Serialize(beBinaryWriter);
                 socketObject.Length = (UInt16)socketObject.Buffer.Length;
 

@@ -21,20 +21,9 @@ namespace Server
 {
     public sealed class UdpServer
     {
+        // Everything singleton related
         private static volatile UdpServer instance;
-        private static object threadLock = new Object();
-
-        private static readonly object clientLock = new Object();
-
-        private Socket serverSocket;
-
-        private BlockingCollection<SocketObject> receiveQueue = new BlockingCollection<SocketObject>();
-        private BlockingCollection<SocketObject> sendQueue = new BlockingCollection<SocketObject>();
-
-        private bool isRunning = false;
-
-        public UInt32 packetNumberClient = 0;
-
+        private static readonly object threadLock = new Object();
         public static UdpServer Instance
         {
             get
@@ -49,11 +38,19 @@ namespace Server
                         }
                     }
                 }
-
                 return instance;
             }
-
         }
+
+        private Socket serverSocket;
+
+        private BlockingCollection<SocketObject> receiveQueue = new BlockingCollection<SocketObject>();
+        private BlockingCollection<SocketObject> sendQueue = new BlockingCollection<SocketObject>();
+
+        private bool isRunning = false;
+
+        public UInt32 packetNumberClient = 0;
+
 
         public bool startServer()
         {
@@ -79,10 +76,13 @@ namespace Server
         {
             isRunning = false;
 
-            serverSocket.Shutdown(SocketShutdown.Both);
-            serverSocket.Close();
-            serverSocket.Dispose();
-            serverSocket = null;
+            if (serverSocket != null)
+            {
+                serverSocket.Shutdown(SocketShutdown.Both);
+                serverSocket.Close();
+                serverSocket.Dispose();
+                serverSocket = null;
+            }
         }
 
         private void startReceiveQueue()
@@ -235,18 +235,15 @@ namespace Server
 
         private void ReceiveData(object passedObject)
         {
-            //lock (threadLock) // for better debugging
+            try
             {
-                try
-                {
-                    SocketObject socketObject = (SocketObject)passedObject;
-                    PacketHandler packetHandler = new PacketHandler();
-                    packetHandler.handleIncommingPacket(socketObject);
-                }
-                catch (InvalidCastException ice)
-                {
-                    Debug.WriteLineIf(Config.Instance.Debug, ice.ToString(), DateTime.Now.ToString() + " " + this.GetType().Name + ".SendPacket");
-                }
+                SocketObject socketObject = (SocketObject)passedObject;
+                PacketHandler packetHandler = new PacketHandler();
+                packetHandler.handleIncommingPacket(socketObject);
+            }
+            catch (InvalidCastException ice)
+            {
+                Debug.WriteLineIf(Config.Instance.Debug, ice.ToString(), DateTime.Now.ToString() + " " + this.GetType().Name + ".SendPacket");
             }
         }
 
