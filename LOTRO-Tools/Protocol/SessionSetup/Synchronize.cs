@@ -62,7 +62,7 @@ namespace Protocol.SessionSetup
                 if (HasGLSTicket == 0x04)
                 {
                     UInt32 remainingLength = ber.ReadUInt32();
-                    GLSTicketDirect = ber.ReadStringBE();
+                    GLSTicketDirect = ber.ReadString();
                 }
 
                 TimeSpan span = TimeSpan.FromSeconds(timeStarted);
