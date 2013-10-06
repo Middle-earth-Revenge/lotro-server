@@ -19,6 +19,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SessionControl", "Client\Se
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Protocol", "Protocol\Protocol.csproj", "{9DB4835F-A84F-4AE7-BE31-36BBC65B6A17}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HelperAnalyzer", "HelperAnalyzer\HelperAnalyzer.csproj", "{8FC26E4E-8D15-4E0F-B7CB-04915321670C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -121,6 +123,16 @@ Global
 		{9DB4835F-A84F-4AE7-BE31-36BBC65B6A17}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{9DB4835F-A84F-4AE7-BE31-36BBC65B6A17}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{9DB4835F-A84F-4AE7-BE31-36BBC65B6A17}.Release|x86.ActiveCfg = Release|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8FC26E4E-8D15-4E0F-B7CB-04915321670C}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
