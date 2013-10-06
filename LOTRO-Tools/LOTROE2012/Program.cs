@@ -34,13 +34,20 @@ namespace LOTROE2012
                 Console.WriteLine();
                 Console.WriteLine("e.g. > LOTRO-SE.exe config.xml");
                 Console.ReadKey(true);
-                Environment.Exit(0);
+                Environment.Exit(1);
+            }
+
+            if (!File.Exists(args[0]))
+            {
+                Console.WriteLine("Config file {0} not found!", args[0]);
+                Console.ReadKey(true);
+                Environment.Exit(2);
             }
 
             Settings.ConfigHandler configHandler = new Settings.ConfigHandler();
             configHandler.readConfig(args[0]);
 
-           if (Settings.Config.Instance.Debug)
+            if (Settings.Config.Instance.Debug)
             {
                 TextWriterTraceListener tr1 = new TextWriterTraceListener(System.Console.Out);
                 Debug.Listeners.Add(tr1);
