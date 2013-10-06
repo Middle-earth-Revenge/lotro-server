@@ -1,4 +1,5 @@
 ﻿using Helper;
+using Protocol.Generic;
 using System;
 using System.IO;
 using System.Text;
@@ -32,6 +33,21 @@ namespace Server
             
         }
 
+        public static void handleOutgoingPacket(SocketObject socketObject, Payload payload)
+        {
+            if (payload != null)
+            {
+                MemoryStream memoryStreamOutput = new MemoryStream();
+                BEBinaryWriter beBinaryWriter = new BEBinaryWriter(memoryStreamOutput, System.Text.Encoding.UTF8);
+
+                socketObject.Buffer = payload.Serialize(beBinaryWriter);
+                socketObject.Length = (UInt16)socketObject.Buffer.Length;
+
+                Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, String.Format("{0,4:0000}", dumpCounter++) + "_server-" + postfix, socketObject.Buffer, socketObject.Length, true);
+
+                UdpServer.Instance.addToSendQueue(socketObject);
+            }
+        }
 
     }
 }

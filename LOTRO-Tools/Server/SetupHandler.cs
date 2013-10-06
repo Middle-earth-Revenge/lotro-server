@@ -64,7 +64,7 @@ namespace Server
                     }
                 }
 
-                handleOutgoingPacket(socketObject, payload); // 2nd server packet send
+                PacketHandler.handleOutgoingPacket(socketObject, payload); // 2nd server packet send
                 return;
 
             }
@@ -132,7 +132,7 @@ namespace Server
                         payload.Header.SequenceNumber = session.SequenceNumberServer;
                         payload.Header.ACKNR = session.ACKNRServer;
 
-                        handleOutgoingPacket(socketObject, payload); // 6th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 6th server packet send
 
                         session.SequenceNumberServer++;
 
@@ -143,14 +143,14 @@ namespace Server
                         payload.Data = endConnection;
                         //payload.Header.SequenceNumber = 0x00000000;
 
-                        handleOutgoingPacket(socketObject, payload); // 6th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 6th server packet send
 
                         Protocol.Server.Session.TerminateServer endConnection2 = new Protocol.Server.Session.TerminateServer();
                         payload.Header.SessionID = Config.Instance.ServerId;
                         payload.Data = endConnection2;
                         payload.Header.SequenceNumber = 0x00000000;
 
-                        handleOutgoingPacket(socketObject, payload); // 6th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 6th server packet send
                     }
                     else // ok glsticket there, no check if valid
                     {
@@ -172,7 +172,7 @@ namespace Server
                     payload.Header.SequenceNumber = session.SequenceNumberServer;
                     payload.Header.ACKNR = session.ACKNRServer;
 
-                    handleOutgoingPacket(socketObject, payload); // 2nd server packet send
+                    PacketHandler.handleOutgoingPacket(socketObject, payload); // 2nd server packet send
 
                     session.SequenceNumberServer++;
 
@@ -224,7 +224,7 @@ namespace Server
                         payload.Header.ACKNR = session.ACKNRServer;
 
 
-                        handleOutgoingPacket(socketObject, payload); // 3nd server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 3nd server packet send
 
                         session.SequenceNumberServer++;
 
@@ -257,7 +257,7 @@ namespace Server
                         payload.Header.SequenceNumber = session.SequenceNumberServer;
                         payload.Header.ACKNR = session.ACKNRServer;
 
-                        handleOutgoingPacket(socketObject, payload); // 4th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 4th server packet send
 
                         session.SequenceNumberServer++;
 
@@ -291,7 +291,7 @@ namespace Server
                         payload.Header.SequenceNumber = session.SequenceNumberServer;
                         payload.Header.ACKNR = session.ACKNRServer;
 
-                        handleOutgoingPacket(socketObject, payload); // 5th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 5th server packet send
 
                         payload.Header.ACKNR += 0x00010000;
 
@@ -333,7 +333,7 @@ namespace Server
                         payload.Header.SequenceNumber = session.SequenceNumberServer;
                         payload.Header.ACKNR = session.ACKNRServer;
 
-                        handleOutgoingPacket(socketObject, payload); // 6th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 6th server packet send
 
                         session.SequenceNumberServer++;
 
@@ -391,7 +391,7 @@ namespace Server
                         payload.Header.SequenceNumber = session.SequenceNumberServer;
                         payload.Header.ACKNR = session.ACKNRServer;
 
-                        handleOutgoingPacket(socketObject, payload); // 6th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 6th server packet send
 
                         session.SequenceNumberServer++;
 
@@ -416,7 +416,7 @@ namespace Server
                         payload.Header.SequenceNumber = session.SequenceNumberServer;
                         payload.Header.ACKNR = session.ACKNRServer;
 
-                        handleOutgoingPacket(socketObject, payload); // 6th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 6th server packet send
 
                         session.SequenceNumberServer++;
 
@@ -427,14 +427,14 @@ namespace Server
                         payload.Data = endConnection;
                         //payload.Header.SequenceNumber = 0x00000000;
 
-                        handleOutgoingPacket(socketObject, payload); // 6th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 6th server packet send
 
                         Protocol.Server.Session.TerminateServer endConnection2 = new Protocol.Server.Session.TerminateServer();
                         payload.Header.SessionID = Config.Instance.ServerId;
                         payload.Data = endConnection2;
                         payload.Header.SequenceNumber = 0x00000000;
 
-                        handleOutgoingPacket(socketObject, payload); // 6th server packet send
+                        PacketHandler.handleOutgoingPacket(socketObject, payload); // 6th server packet send
                     }
 
                     ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -445,20 +445,6 @@ namespace Server
             // are there more cases?
 
             Debug.WriteLineIf(Config.Instance.Debug, "Invalid packet received", DateTime.Now.ToString() + " SetupHandler.process");
-        }
-
-        private static void handleOutgoingPacket(SocketObject socketObject, Payload payload)
-        {
-            MemoryStream memoryStreamOutput = new MemoryStream();
-            BEBinaryWriter beBinaryWriter = new BEBinaryWriter(memoryStreamOutput, System.Text.Encoding.UTF8);
-
-            if (payload != null)
-            {
-                socketObject.Buffer = payload.Serialize(beBinaryWriter);
-                socketObject.Length = (UInt16)socketObject.Buffer.Length;
-
-                UdpServer.Instance.addToSendQueue(socketObject);
-            }
         }
     }
 }

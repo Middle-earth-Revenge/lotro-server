@@ -66,7 +66,7 @@ namespace Server
                     payload.Header.SequenceNumber = session.SequenceNumberServer;
                     payload.Header.ACKNR = session.ACKNRServer;
 
-                    handleOutgoingPacket(socketObject, payload); // 4th server packet send
+                    PacketHandler.handleOutgoingPacket(socketObject, payload); // 4th server packet send
 
                     session.SequenceNumberServer++;
                 }
@@ -98,27 +98,11 @@ namespace Server
                     payload.Header.ACKNR = (session.ACKNRServer + 0x00040000);
                     payload.Header.SequenceNumber = lastReceivedSequenceNr;
 
-                    handleOutgoingPacket(socketObject, payload);
+                    PacketHandler.handleOutgoingPacket(socketObject, payload);
 
                     session.ACKNRServer = payload.Header.ACKNR;
 
                 }
-            }
-        }
-
-        private static void handleOutgoingPacket(SocketObject socketObject, Payload payload)
-        {
-            if (payload != null)
-            {
-                MemoryStream memoryStreamOutput = new MemoryStream();
-                BEBinaryWriter beBinaryWriter = new BEBinaryWriter(memoryStreamOutput, System.Text.Encoding.UTF8);
-
-                socketObject.Buffer = payload.Serialize(beBinaryWriter);
-                socketObject.Length = (UInt16)socketObject.Buffer.Length;
-
-                //Helper.HelperMethods.Instance.writeLog(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.ServerLogFolder, "send-" + Server.UdpServer.Instance.packetNumberClient, socketObject.Buffer, socketObject.Length, true);
-
-                UdpServer.Instance.addToSendQueue(socketObject);
             }
         }
     }
