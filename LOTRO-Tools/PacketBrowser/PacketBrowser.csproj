@@ -56,15 +56,25 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="ClientPacket.cs" />
+    <Compile Include="FixedPacketAnalyzer.cs" />
+    <Compile Include="IPacketAnalyzer.cs" />
     <Compile Include="PacketBrowserApp.cs" />
     <Compile Include="PacketData.cs" />
     <Compile Include="PacketDatabase.cs" />
+    <Compile Include="PacketDescription.cs" />
     <Compile Include="PacketFilterConverter.cs" />
+    <Compile Include="PacketSegment.cs" />
+    <Compile Include="PacketSegmentDescription.cs" />
+    <Compile Include="PacketView.xaml.cs">
+      <DependentUpon>PacketView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ServerPacket.cs" />
     <Compile Include="Session.cs" />
     <Compile Include="StartupDialog.xaml.cs">
       <DependentUpon>StartupDialog.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Utils\ColorToBrushConverter.cs" />
+    <Compile Include="Utils\CustomBitConverter.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -77,6 +87,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="PacketView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="StartupDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

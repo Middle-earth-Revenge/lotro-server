@@ -46,13 +46,6 @@ namespace PacketBrowser
                 return Visibility.Visible;
             }
 
-            // By content
-            toFilter = packet.TranslatedData;
-            if (toFilter.Contains(filterQuery))
-            {
-                return Visibility.Visible;
-            }
-
             // Didn't pass, collapse
             return Visibility.Collapsed;
         }

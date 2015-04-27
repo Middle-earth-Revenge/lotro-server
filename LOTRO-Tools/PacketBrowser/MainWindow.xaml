@@ -81,7 +81,9 @@
                                         </StackPanel>
                                         
                                         <Expander Header="Details">
-                                            <TextBlock Text="{Binding TranslatedData}" TextWrapping="Wrap" />
+                                            <StackPanel>
+                                                <local:PacketView Packet="{Binding}" />
+                                            </StackPanel>
                                         </Expander>
                                     </StackPanel>
                                 </DataTemplate>
