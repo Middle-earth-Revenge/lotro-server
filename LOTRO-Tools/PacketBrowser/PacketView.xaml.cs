@@ -37,15 +37,42 @@ namespace PacketBrowser
             typeof(PacketView),
             new FrameworkPropertyMetadata(OnPacketChanged));
 
+        // Because of how intensive this control is, we only want to build the inner UI if the control is actually visible
+        public bool IsInView
+        {
+            get { return m_IsInView; }
+            set
+            {
+                if (m_IsInView != value)
+                {
+                    if (!m_IsInView && Packet != null && m_PacketChanged)
+                    {
+                        OnPacketAssigned();
+                    }
+
+                    m_IsInView = value;
+                }
+            }
+        }
+        private bool m_IsInView;
+
         private static void OnPacketChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PacketView view = (PacketView)d;
-            view.OnPacketAssigned();
+
+            view.m_PacketChanged = true;
+
+            if (view.IsInView && e.NewValue != null)
+                view.OnPacketAssigned();
         }
+
+        private bool m_PacketChanged;
 
         // Re-initialize the UI with a new packet
         private void OnPacketAssigned()
         {
+            m_PacketChanged = false;
+
             // Clear the old UI
             ByteValuesGrid.Children.Clear();
             ByteValuesGrid.ColumnDefinitions.Clear();
