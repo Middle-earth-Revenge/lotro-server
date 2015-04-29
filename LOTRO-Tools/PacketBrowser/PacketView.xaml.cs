@@ -92,7 +92,7 @@ namespace PacketBrowser
             });
 
             // Create 16 data columns in both grids
-            for (int i = 0; i < 17; ++i)
+            for (int i = 0; i < 16; ++i)
             {
                 ByteValuesGrid.ColumnDefinitions.Add(new ColumnDefinition()
                 {
