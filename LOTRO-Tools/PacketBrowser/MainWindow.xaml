@@ -74,18 +74,7 @@
                         <ItemsControl Grid.Row="2" ItemsSource="{Binding Packets}">
                             <ItemsControl.Resources>
                                 <DataTemplate DataType="{x:Type local:PacketData}">
-                                    <StackPanel>
-                                        <StackPanel Orientation="Horizontal">
-                                            <TextBlock Text="{Binding Type, StringFormat=[{0:X8}]}" />
-                                            <TextBlock Text="{Binding Summary, StringFormat=({0})}" Margin="5,0,0,0" />
-                                        </StackPanel>
-                                        
-                                        <Expander Header="Details">
-                                            <StackPanel>
-                                                <local:PacketView Packet="{Binding}" />
-                                            </StackPanel>
-                                        </Expander>
-                                    </StackPanel>
+                                    <local:PacketView Packet="{Binding}" />
                                 </DataTemplate>
                             </ItemsControl.Resources>
 

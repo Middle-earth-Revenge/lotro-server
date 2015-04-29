@@ -37,15 +37,42 @@ namespace PacketBrowser
             typeof(PacketView),
             new FrameworkPropertyMetadata(OnPacketChanged));
 
+        // Because of how intensive this control is, we only want to build the inner UI if the control is actually visible
+        public bool IsInView
+        {
+            get { return m_IsInView; }
+            set
+            {
+                if (m_IsInView != value)
+                {
+                    if (!m_IsInView && Packet != null && m_PacketChanged)
+                    {
+                        OnPacketAssigned();
+                    }
+
+                    m_IsInView = value;
+                }
+            }
+        }
+        private bool m_IsInView;
+
         private static void OnPacketChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
             PacketView view = (PacketView)d;
-            view.OnPacketAssigned();
+
+            view.m_PacketChanged = true;
+
+            if (view.IsInView && e.NewValue != null)
+                view.OnPacketAssigned();
         }
+
+        private bool m_PacketChanged;
 
         // Re-initialize the UI with a new packet
         private void OnPacketAssigned()
         {
+            m_PacketChanged = false;
+
             // Clear the old UI
             ByteValuesGrid.Children.Clear();
             ByteValuesGrid.ColumnDefinitions.Clear();
@@ -65,7 +92,7 @@ namespace PacketBrowser
             });
 
             // Create 16 data columns in both grids
-            for (int i = 0; i < 17; ++i)
+            for (int i = 0; i < 16; ++i)
             {
                 ByteValuesGrid.ColumnDefinitions.Add(new ColumnDefinition()
                 {
@@ -190,6 +217,34 @@ namespace PacketBrowser
                     Text = tooltip
                 };
 
+                // Handle visualization
+                if (segment != null)
+                {
+                    wrap.MouseEnter += (s, e) =>
+                    {
+                        for (int j = 0; j < segment.Length; ++j)
+                        {
+                            Border b = RawDataGrid.Children[j + segment.Offset] as Border;
+                            if (b != null)
+                            {
+                                b.Background = new SolidColorBrush(segment.Color);
+                            }
+                        }
+                    };
+
+                    wrap.MouseLeave += (s, e) =>
+                    {
+                        for (int j = 0; j < segment.Length; ++j)
+                        {
+                            Border b = RawDataGrid.Children[j + segment.Offset] as Border;
+                            if (b != null)
+                            {
+                                b.Background = null;
+                            }
+                        }
+                    };
+                }
+
                 Grid.SetColumn(wrap, (i % 16) + 1);
                 Grid.SetRow(wrap, (i / 16) + 1);
 
@@ -217,6 +272,23 @@ namespace PacketBrowser
                 Grid.SetRow(wrap, i / 16);
 
                 RawDataGrid.Children.Add(wrap);
+            }
+        }
+
+        private void CopyData_Click(object sender, RoutedEventArgs e)
+        {
+            // Copy the current packet's data into the clipboard in a format suitable for pasting into
+            // popular hex editors
+            if (Packet != null)
+            {
+                string data = string.Empty;
+                foreach (byte b in Packet.RawData)
+                {
+                    data += b.ToString("X2") + " ";
+                }
+                data.TrimEnd();
+
+                Clipboard.SetData(DataFormats.Text, data);
             }
         }
     }

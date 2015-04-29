@@ -149,7 +149,7 @@ namespace PacketBrowser
                 if (Type == 0x00010000)
                 {
                     // Session init packet, skip first two bytes!
-                    return 2;
+                    return 0;
                 }
 
                 return 0;
@@ -163,11 +163,11 @@ namespace PacketBrowser
             int baseOffset = 0;
 
             // Session startup segment for first packet
-            if (Type == 0x00010000)
-            {
-                baseOffset = 2;
-                Segments.Add(new PacketSegment(this, 0, 2) { Name = "First packet offset", TranslationType = PacketSegmentType.UnsignedInteger });
-            }
+            //if (Type == 0x00010000)
+            //{
+            //    baseOffset = 2;
+            //    Segments.Add(new PacketSegment(this, 0, 2) { Name = "First packet offset", TranslationType = PacketSegmentType.UnsignedInteger });
+            //}
 
             // Session ID
             int offset = baseOffset;

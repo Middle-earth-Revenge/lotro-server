@@ -5,44 +5,64 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PacketBrowser"
              mc:Ignorable="d" 
-             d:DesignHeight="300" d:DesignWidth="300" FontFamily="Consolas"
+             d:DesignHeight="300" d:DesignWidth="300"
              x:Name="PacketViewRoot">
     <UserControl.Resources>
         <local:ColorToBrushConverter x:Key="ColorToBrushConverter" />
     </UserControl.Resources>
-    
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        
-        <Grid Grid.Column="0" Grid.Row="0" x:Name="ByteValuesGrid" />
-        <Grid Grid.Column="1" Grid.Row="0" x:Name="RawDataGrid" Margin="20,20,0,0" />
-        
-        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,10,0,0">
-            <ItemsControl ItemsSource="{Binding Packet.Segments, ElementName=PacketViewRoot}">
-                <ItemsControl.ItemTemplate>
-                    <DataTemplate>
-                        <Border Background="{Binding Color, Converter={StaticResource ColorToBrushConverter}}" Padding="4">
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
 
-                                <TextBlock Grid.Column="0" Text="{Binding Name}" />
-                                <TextBlock Grid.Column="1" Text="{Binding Value, StringFormat=[{0}]}" TextWrapping="Wrap" />
-                            </Grid>
-                        </Border>
-                    </DataTemplate>
-                </ItemsControl.ItemTemplate>
-            </ItemsControl>
+    <StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{Binding Packet.Type, ElementName=PacketViewRoot, StringFormat=[{0:X8}]}" />
+            <TextBlock Grid.Column="1" Text="{Binding Packet.Summary, ElementName=PacketViewRoot, StringFormat=({0})}" Margin="5,0,0,0" />
+            
+            <Button Grid.Column="2" Width="48"
+                    Content="Copy" Click="CopyData_Click" />
         </Grid>
-    </Grid>
+
+        <Expander Header="Details" IsExpanded="{Binding IsInView, ElementName=PacketViewRoot, Mode=OneWayToSource}">
+            <StackPanel>
+                <Grid TextBlock.FontFamily="Consolas">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="400" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Column="0" Grid.Row="0" x:Name="ByteValuesGrid" />
+                    <Grid Grid.Column="1" Grid.Row="0" x:Name="RawDataGrid" Margin="20,20,0,0" HorizontalAlignment="Left" />
+
+                    <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Margin="0,10,0,0">
+                        <ItemsControl ItemsSource="{Binding Packet.Segments, ElementName=PacketViewRoot}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border Background="{Binding Color, Converter={StaticResource ColorToBrushConverter}}" Padding="4">
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="Auto" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+
+                                            <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                                            <TextBlock Grid.Column="1" Text="{Binding Value, StringFormat=[{0}]}" TextWrapping="Wrap" />
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Grid>
+                </Grid>
+            </StackPanel>
+        </Expander>
+    </StackPanel>
 </UserControl>
