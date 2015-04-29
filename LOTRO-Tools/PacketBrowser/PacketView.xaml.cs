@@ -190,6 +190,34 @@ namespace PacketBrowser
                     Text = tooltip
                 };
 
+                // Handle visualization
+                if (segment != null)
+                {
+                    wrap.MouseEnter += (s, e) =>
+                    {
+                        for (int j = 0; j < segment.Length; ++j)
+                        {
+                            Border b = RawDataGrid.Children[j + segment.Offset] as Border;
+                            if (b != null)
+                            {
+                                b.Background = new SolidColorBrush(segment.Color);
+                            }
+                        }
+                    };
+
+                    wrap.MouseLeave += (s, e) =>
+                    {
+                        for (int j = 0; j < segment.Length; ++j)
+                        {
+                            Border b = RawDataGrid.Children[j + segment.Offset] as Border;
+                            if (b != null)
+                            {
+                                b.Background = null;
+                            }
+                        }
+                    };
+                }
+
                 Grid.SetColumn(wrap, (i % 16) + 1);
                 Grid.SetRow(wrap, (i / 16) + 1);
 

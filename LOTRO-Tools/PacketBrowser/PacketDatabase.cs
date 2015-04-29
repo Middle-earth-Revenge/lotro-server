@@ -11,40 +11,40 @@ namespace PacketBrowser
         static PacketDatabase()
         {
             //TEST:
-            //m_Analyzers[0x00010000] = new FixedPacketAnalyzer(new PacketDescription()
-            //{
-            //    Name = "Session setup",
-            //    Comment = "The 1st packet sent from the client to the server to establish connection",
-            //    Segments = new List<PacketSegmentDescription>()
-            //    {
-            //        new PacketSegmentDescription()
-            //        {
-            //            Name = "Client version",
-            //            RelativeOffset = 0,
-            //            Type = PacketSegmentType.ASCII,
-            //        },
-            //        new PacketSegmentDescription()
-            //        {
-            //            Name = "Timestamp",
-            //            RelativeOffset = 19,
-            //            Length = 4,
-            //            Type = PacketSegmentType.UnsignedInteger
-            //        },
-            //        new PacketSegmentDescription()
-            //        {
-            //            Name = "Account name",
-            //            RelativeOffset = 0,
-            //            Type = PacketSegmentType.Unicode,
-            //            IsLittleEndian = true
-            //        },
-            //        new PacketSegmentDescription()
-            //        {
-            //            Name = "Client public key",
-            //            RelativeOffset = 4,
-            //            Type = PacketSegmentType.ASCII
-            //        }
-            //    }
-            //});
+            m_Analyzers[0x00010000] = new FixedPacketAnalyzer(new PacketDescription()
+            {
+                Name = "Session setup",
+                Comment = "The 1st packet sent from the client to the server to establish connection",
+                Segments = new List<PacketSegmentDescription>()
+                {
+                    new PacketSegmentDescription()
+                    {
+                        Name = "Client version",
+                        RelativeOffset = 0,
+                        Type = PacketSegmentType.ASCII,
+                    },
+                    new PacketSegmentDescription()
+                    {
+                        Name = "Timestamp",
+                        RelativeOffset = 12,
+                        Length = 4,
+                        Type = PacketSegmentType.UnsignedInteger
+                    },
+                    new PacketSegmentDescription()
+                    {
+                        Name = "Account name",
+                        RelativeOffset = 0,
+                        Type = PacketSegmentType.Unicode,
+                        IsLittleEndian = true
+                    },
+                    new PacketSegmentDescription()
+                    {
+                        Name = "Client public key",
+                        RelativeOffset = 4,
+                        Type = PacketSegmentType.ASCII
+                    }
+                }
+            });
         }
 
         // Fill in segment info for a packet
