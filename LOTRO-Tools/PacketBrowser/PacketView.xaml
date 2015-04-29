@@ -12,10 +12,19 @@
     </UserControl.Resources>
 
     <StackPanel>
-        <StackPanel Orientation="Horizontal">
-            <TextBlock Text="{Binding Packet.Type, ElementName=PacketViewRoot, StringFormat=[{0:X8}]}" />
-            <TextBlock Text="{Binding Packet.Summary, ElementName=PacketViewRoot, StringFormat=({0})}" Margin="5,0,0,0" />
-        </StackPanel>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Column="0" Text="{Binding Packet.Type, ElementName=PacketViewRoot, StringFormat=[{0:X8}]}" />
+            <TextBlock Grid.Column="1" Text="{Binding Packet.Summary, ElementName=PacketViewRoot, StringFormat=({0})}" Margin="5,0,0,0" />
+            
+            <Button Grid.Column="2" Width="48"
+                    Content="Copy" Click="CopyData_Click" />
+        </Grid>
 
         <Expander Header="Details" IsExpanded="{Binding IsInView, ElementName=PacketViewRoot, Mode=OneWayToSource}">
             <StackPanel>

@@ -274,5 +274,22 @@ namespace PacketBrowser
                 RawDataGrid.Children.Add(wrap);
             }
         }
+
+        private void CopyData_Click(object sender, RoutedEventArgs e)
+        {
+            // Copy the current packet's data into the clipboard in a format suitable for pasting into
+            // popular hex editors
+            if (Packet != null)
+            {
+                string data = string.Empty;
+                foreach (byte b in Packet.RawData)
+                {
+                    data += b.ToString("X2") + " ";
+                }
+                data.TrimEnd();
+
+                Clipboard.SetData(DataFormats.Text, data);
+            }
+        }
     }
 }
