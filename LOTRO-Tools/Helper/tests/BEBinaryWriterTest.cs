@@ -1,11 +1,10 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace HelperAnalyzer
 {
-    [TestClass]
+    [TestFixture]
     public class BEBinaryWriterTests
     {
         private static string ToString(byte[] packet)
@@ -28,7 +27,7 @@ namespace HelperAnalyzer
             return sb.ToString();
         }
 
-        [TestMethod]
+        [Test]
         public void testWriteUInt16BE()
         {
             MemoryStream stream = new MemoryStream();
@@ -40,7 +39,7 @@ namespace HelperAnalyzer
             Assert.AreEqual(ToString(new byte[] { 0x01, 0x02, 0x03, 0x04 }), ToString(stream.ToArray()));
         }
 
-        [TestMethod]
+        [Test]
         public void testWriteUInt32BE()
         {
             MemoryStream stream = new MemoryStream();
@@ -52,7 +51,7 @@ namespace HelperAnalyzer
             Assert.AreEqual(ToString(new byte[] { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 }), ToString(stream.ToArray()));
         }
 
-        [TestMethod]
+        [Test]
         public void testWriteUInt64BE()
         {
             MemoryStream stream = new MemoryStream();
@@ -65,7 +64,7 @@ namespace HelperAnalyzer
         }
 
         // FIXME: it seems like this is not implemented?!?
-        // [TestMethod]
+        // [Test]
         public void testWriteUnicodeString()
         {
             MemoryStream stream = new MemoryStream();

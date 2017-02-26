@@ -1,14 +1,13 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Text;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
-namespace HelperAnalyzer
+namespace Helper.Test
 {
-    [TestClass]
-    public class BEBinaryReaderTests
+    [TestFixture]
+    public class BEBinaryReaderTest
     {
-        private static Helper.BEBinaryReader InitReader()
+        static Helper.BEBinaryReader InitReader()
         {
             byte[] data = new byte[16];
             for (int i = 0; i < data.Length; i++)
@@ -19,7 +18,7 @@ namespace HelperAnalyzer
             return new Helper.BEBinaryReader(stream, Encoding.UTF8);
         }
 
-        [TestMethod]
+        [Test]
         public void testReadUInt16BE()
         {
             Helper.BEBinaryReader reader = InitReader();
@@ -30,7 +29,7 @@ namespace HelperAnalyzer
             Assert.AreEqual((ushort)0x0304, tmp);
         }
 
-        [TestMethod]
+        [Test]
         public void testReadUInt32BE()
         {
             Helper.BEBinaryReader reader = InitReader();
@@ -41,7 +40,7 @@ namespace HelperAnalyzer
             Assert.AreEqual((uint)0x05060708, tmp);
         }
 
-        [TestMethod]
+        [Test]
         public void testReadUInt64BE()
         {
             Helper.BEBinaryReader reader = InitReader();
@@ -52,7 +51,7 @@ namespace HelperAnalyzer
             Assert.AreEqual((ulong)0x090A0B0C0D0E0F10, tmp);
         }
 
-        [TestMethod]
+        [Test]
         public void testReadUnicodeString()
         {
             byte[] data = new byte[16];
