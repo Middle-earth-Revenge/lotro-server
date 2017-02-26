@@ -9,8 +9,6 @@
  */
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Collections;
 
 namespace LOTRO
@@ -19,20 +17,20 @@ namespace LOTRO
 	public class Decrypt
 	{
 
-		private int[,] jumpTableClient;
-		private List<byte[][]> lookUpListClient;
-		private int[,] jumpTableServer;
-		private List<byte[][]> lookUpListServer;
-		private int startPosition;
-		private int lastIndex; // last index has to be keept til new value is found
+		readonly int[,] jumpTableClient;
+		readonly List<byte[][]> lookUpListClient;
+		readonly int[,] jumpTableServer;
+		readonly List<byte[][]> lookUpListServer;
+		int startPosition;
+		int lastIndex; // last index has to be keept til new value is found
 
 
 		public Decrypt()
 		{
-			this.jumpTableClient = HelperMethods.Instance.getJumpTableClient();
-			this.lookUpListClient = HelperMethods.Instance.getLookUpListClient();
-			this.jumpTableServer = HelperMethods.Instance.getJumpTableServer();
-			this.lookUpListServer = HelperMethods.Instance.getLookUpListServer();
+			jumpTableClient = HelperMethods.Instance.getJumpTableClient();
+			lookUpListClient = HelperMethods.Instance.getLookUpListClient();
+			jumpTableServer = HelperMethods.Instance.getJumpTableServer();
+			lookUpListServer = HelperMethods.Instance.getLookUpListServer();
 		}
 
 		// decrypts both, server- and client packets
@@ -130,7 +128,7 @@ namespace LOTRO
 		 * 5. Get the value which is given in the second look-up-table
 		 * 6. Start with 4 again til there are no bits left in the array
 		 */
-		private byte[] processBlock(byte[] block, bool client)
+		byte[] processBlock(byte[] block, bool client)
 		{
 			int[,] jumpTable;
 			List<byte[][]> lookUpList;
@@ -139,15 +137,15 @@ namespace LOTRO
 
 			if (client)
 			{
-				jumpTable = this.jumpTableClient;
-				lookUpList = this.lookUpListClient;
+				jumpTable = jumpTableClient;
+				lookUpList = lookUpListClient;
 				offset = 16372;
 				multiplier = 16;
 			}
 			else
 			{
-				jumpTable = this.jumpTableServer;
-				lookUpList = this.lookUpListServer;
+				jumpTable = jumpTableServer;
+				lookUpList = lookUpListServer;
 				offset = 16125;
 				multiplier = 6;
 			}

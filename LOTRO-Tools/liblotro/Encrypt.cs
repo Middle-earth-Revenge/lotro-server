@@ -12,7 +12,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 using System.Collections;
 
@@ -20,15 +19,15 @@ namespace LOTRO
 {
 	public class Encrypt
 	{
-		private List<byte[][]> lookUpList;
-		private byte[][] quickLookUpArray;
+		readonly List<byte[][]> lookUpList;
+		readonly byte[][] quickLookUpArray;
 		//private int startPosition;
 		//private int lastIndex = 0; // last index has to be keept til new value is found
 
 		public Encrypt()
 		{
-			this.lookUpList = HelperMethods.Instance.getLookUpListServer();
-			this.quickLookUpArray = HelperMethods.Instance.getQuickLookUpListArrayServer();
+			lookUpList = HelperMethods.Instance.getLookUpListServer();
+			quickLookUpArray = HelperMethods.Instance.getQuickLookUpListArrayServer();
 		}
 
 		public byte[] GenerateEncryptedPacket(byte[] data, bool isClient)

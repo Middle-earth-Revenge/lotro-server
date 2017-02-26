@@ -1,24 +1,23 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using SharpPcap;
 using PacketDotNet;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
 using LOTRO;
+using SharpPcap.LibPcap;
 
 namespace LOTROPacketCaptureAndAutoDecryption
 {
     class Program
     {
 
-        private IPAddress localIPAdress;
-        private Decrypt decryptPacket;
+        IPAddress localIPAdress;
+        Decrypt decryptPacket;
 
-		private readonly string pathOutputDecryptedPackets = "decrypted_packets" + Path.DirectorySeparatorChar;
-		private readonly string pathOutputOriginalPackets = "original_packets" + Path.DirectorySeparatorChar;
-        private Int32 packetCounter = 0;
+		readonly string pathOutputDecryptedPackets = "decrypted_packets" + Path.DirectorySeparatorChar;
+		readonly string pathOutputOriginalPackets = "original_packets" + Path.DirectorySeparatorChar;
+		int packetCounter;
 
         public Program()
         {
@@ -26,17 +25,17 @@ namespace LOTROPacketCaptureAndAutoDecryption
             localIPAdress = getLocalIp();
         }
 
-        private void device_OnPacketArrival(object sender, CaptureEventArgs e)
+        void device_OnPacketArrival(object sender, CaptureEventArgs e)
         {
-            var packet = PacketDotNet.Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
+            var packet = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
 
-            var udpPacket = UdpPacket.GetEncapsulated(packet);
+			var udpPacket = packet.Extract(typeof(UdpPacket));
             if (udpPacket != null)
             {
                 //DateTime time = e.Packet.Timeval.Date;
                 //int len = e.Packet.Data.Length;
 
-                var ipPacket = (PacketDotNet.IpPacket)udpPacket.ParentPacket;
+                var ipPacket = (IpPacket)udpPacket.ParentPacket;
 
                 byte[] data = udpPacket.PayloadData;
 
@@ -63,13 +62,13 @@ namespace LOTROPacketCaptureAndAutoDecryption
 
                     postfix += "-" + BitConverter.ToString(decryptedPacket, 4, 4).Replace("-", "");
 
-                    using (FileStream fsOutput = new FileStream(@pathOutputDecryptedPackets + String.Format("{0,4:0000}", packetCounter) + postfix, FileMode.Create))
+                    using (FileStream fsOutput = new FileStream(@pathOutputDecryptedPackets + string.Format("{0,4:0000}", packetCounter) + postfix, FileMode.Create))
                     {
                         fsOutput.Write(decryptedPacket, 0, decryptedPacket.Length);
                         fsOutput.Close();
                     }
 
-                    using (FileStream fsOutput = new FileStream(pathOutputOriginalPackets + String.Format("{0,4:0000}", packetCounter) + postfix, FileMode.Create))
+                    using (FileStream fsOutput = new FileStream(pathOutputOriginalPackets + string.Format("{0,4:0000}", packetCounter) + postfix, FileMode.Create))
                     {
                         fsOutput.Write(data, 0, data.Length);
                         fsOutput.Close();
@@ -80,7 +79,7 @@ namespace LOTROPacketCaptureAndAutoDecryption
             }
         }
 
-        private IPAddress getLocalIp()
+        static IPAddress getLocalIp()
         {
             IPAddress localIP = null;
 
@@ -111,44 +110,51 @@ namespace LOTROPacketCaptureAndAutoDecryption
                 Console.WriteLine("No devices were found on this machine.");
                 return;
             }
-            else if (devices.Count == 1)
-            {
-                device = devices[0];
-                Console.WriteLine(device);
+			if (devices.Count == 1)
+			{
+				device = devices[0];
+			}
+			else
+			{
+
+				Console.WriteLine("The following " + devices.Count + " devices are available on this machine");
+				Console.WriteLine("-----------------------------------------------------");
+				Console.WriteLine();
+
+				// Print out the available network devices
+				int i = 0;
+				foreach (ICaptureDevice dev in devices)
+				{
+					Console.WriteLine("[{0}.]\n{1}", i, dev);
+					i++;
+				}
+
+				Console.Write("Please choose one (0-{0}): ", (i - 1));
+				ConsoleKeyInfo c = Console.ReadKey();
+
+				if (c.KeyChar == '\0')
+				{
+					Console.WriteLine("Invalid input, choosing first device");
+					device = devices[0];
+				}
+				else
+				{
+					// Extract a device from the list
+					device = devices[int.Parse(c.KeyChar.ToString())]; // this is my device
+				}
             }
-            else
-            {
+			Console.WriteLine(device);
 
-                Console.WriteLine("The following devices are available on this machine");
-                Console.WriteLine("---------------------------------------------------");
-                Console.WriteLine();
-
-                // Print out the available network devices
-                int i = 0;
-                foreach (ICaptureDevice dev in devices)
-                {
-                    Console.WriteLine("[{0}.]\n{1}", i, dev);
-                    i++;
-                }
-
-                Console.Write("Please choose one (0-{0}): ", (i-1));
-                ConsoleKeyInfo c = Console.ReadKey();
-
-                // Extract a device from the list
-                device = devices[Int32.Parse(c.KeyChar.ToString())]; // this is my device
-            }
-
-            // Register our handler function to the
-            // 'packet arrival' event
-            device.OnPacketArrival +=
-                new SharpPcap.PacketArrivalEventHandler(prg.device_OnPacketArrival);
+			// Register our handler function to the
+			// 'packet arrival' event
+			device.OnPacketArrival += prg.device_OnPacketArrival;
 
             // Open the device for capturing
-            int readTimeoutMilliseconds = 1000;
+            const int readTimeoutMilliseconds = 1000;
             device.Open(DeviceMode.Normal, readTimeoutMilliseconds);
 
             // port 2900 is chat server, don't want these packets
-            string filter = "!broadcast and !multicast and udp and !port 53 and !port 59511 and !port 161 and !port 2900 and !port 5355";
+            const string filter = "!broadcast and !multicast and udp and !port 53 and !port 59511 and !port 161 and !port 2900 and !port 5355";
             device.Filter = filter;
 
             Directory.CreateDirectory(prg.pathOutputDecryptedPackets);

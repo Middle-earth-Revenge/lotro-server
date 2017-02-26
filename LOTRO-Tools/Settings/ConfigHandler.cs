@@ -2,7 +2,6 @@
 using System.Xml.Serialization;
 using System.IO;
 using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.Xml;
 
 namespace Settings
@@ -20,23 +19,23 @@ namespace Settings
         /// <returns>The static pointer Settings.Config.Instance (e.g. only a
         /// single instance of a config.xml can be used withing a server). If
         /// reading the file failes this will be null.</returns>
-        public Settings.Config readConfig(string fileName)
+        public Config readConfig(string fileName)
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(Settings.Config));
+                XmlSerializer serializer = new XmlSerializer(typeof(Config));
 
                 using (FileStream fs = new FileStream(@fileName, FileMode.Open))
                 {
-                    Settings.Config.Instance = (Settings.Config) serializer.Deserialize(fs);
-                    Settings.Config.Instance.init();
+                    Config.Instance = (Config) serializer.Deserialize(fs);
+                    Config.Instance.init();
                 }
             }
             catch (FileNotFoundException fnf)
             {
                 Console.Write(fnf.Message);
             }
-            catch (System.InvalidOperationException ioe)
+            catch (InvalidOperationException ioe)
             {
                 Console.Write(ioe.Message);
             }
@@ -45,7 +44,7 @@ namespace Settings
                 Console.Write(se.Message);
             }
 
-            return Settings.Config.Instance;
+            return Config.Instance;
         }
 
         /// <summary>
@@ -54,11 +53,11 @@ namespace Settings
         /// </summary>
         /// <param name="fileName">Filename to write the config.xml to</param>
         /// <param name="config">configuration to write to a file</param>
-        private void writeConfig(string fileName, Settings.Config config)
+        static void writeConfig(string fileName, Config config)
         {
             try
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(Settings.Config));
+				XmlSerializer serializer = new XmlSerializer(config.GetType());
 
                 using (FileStream fs = new FileStream(@fileName, FileMode.Create))
                 {

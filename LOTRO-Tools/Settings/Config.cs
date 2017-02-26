@@ -1,24 +1,21 @@
 ﻿using System;
 using System.IO;
 using System.Xml.Serialization;
-using System.Runtime.Serialization;
 
 
-/* 
- 
+/*
+ *
  * To disable checksum check at "3B 4C 24 1C 75 6A 8B"
  * Replace 75 6a with 90 90
- 
+ *
  */
-
 namespace Settings
 {
-    //[DataContract]
     [Serializable]
     public sealed class Config
     {
-        private static volatile Config instance;
-        private static object syncRoot = new Object();
+        static volatile Config instance;
+        static object syncRoot = new Object();
 
         internal Config()
         {
@@ -52,7 +49,7 @@ namespace Settings
         /// </summary>
         internal void init()
         {
-            if (this.Debug)
+            if (Debug)
             {
                 createFolder(LogFolder + "\\" + ClientLogFolder);
                 createFolder(LogFolder + "\\" + ServerLogFolder);
@@ -65,7 +62,7 @@ namespace Settings
         /// Create a directory and verify it succeeded
         /// </summary>
         /// <param name="folderName">The directory to create</param>
-        private void createFolder(string folderName)
+        static void createFolder(string folderName)
         {
             DirectoryInfo directoryInfo = Directory.CreateDirectory(@folderName);
             if (!directoryInfo.Exists)
