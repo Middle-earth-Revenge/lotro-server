@@ -57,7 +57,7 @@ namespace LOTROPacketCaptureAndAutoDecryption
                     }
 
                     // decrypt packets
-                    byte[] decryptedPacket = decryptPacket.GenerateDecryptedPacket(data, isClientPacket);
+                    byte[] decryptedPacket = decryptPacket.generateDecryptedPacket(data, isClientPacket);
 
                     postfix += "-" + BitConverter.ToString(decryptedPacket, 4, 4).Replace("-", "");
 

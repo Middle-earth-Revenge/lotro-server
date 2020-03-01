@@ -57,12 +57,12 @@ namespace LOTROendecryptClient
 			{
 			case false:
 				prg.packetDecrypt = new Decrypt();
-				byte[] decryptedPacket = prg.packetDecrypt.GenerateDecryptedPacket(packet, true);
+				byte[] decryptedPacket = prg.packetDecrypt.generateDecryptedPacket(packet, true);
 				prg.fsOutput.Write(decryptedPacket, 0, decryptedPacket.Length);
 				break;
 			case true:
 				prg.packetEncrypt = new Encrypt();
-				byte[] encryptedPacket = prg.packetEncrypt.GenerateEncryptedPacket(packet, true);
+				byte[] encryptedPacket = prg.packetEncrypt.generateEncryptedPacket(packet, true);
 				prg.fsOutput.Write(encryptedPacket, 0, encryptedPacket.Length);
 				break;
 

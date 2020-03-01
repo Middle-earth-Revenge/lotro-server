@@ -1,7 +1,7 @@
 /*
  * Short explaination how this class works:
  * 
- * Call 'GenerateDecryptedPacket(your raw packet in byte[], true if it'S a client packet; false if it's a server packet);'. Returns the decrypted packet.
+ * Call 'generateDecryptedPacket(your raw packet in byte[], true if it'S a client packet; false if it's a server packet);'. Returns the decrypted packet.
  * A raw client or server packet is only the "data part" of the udp packet, not the whole packet with checksum, port and ip adress,...
  * The lotro client uses look up tables for decryption as well. They maybe change with newer versions of the client. But, they can easily extracted from hex dump
  * when the client is running. They don't exist in the .exe while not running! Maybe the client loads the values from the zipped files?
@@ -87,7 +87,7 @@ namespace Helper
 		// decrypts both, server- and client packets
 		// true for a client packet
 		// false for a server packet
-		public byte[] GenerateDecryptedPacket(byte[] packet, bool isClientPacket)
+		public byte[] generateDecryptedPacket(byte[] packet, bool isClientPacket)
 		{
             // If the first two bytes are 0x00 no encryption has happened yet
             if (packet[0] == 0 && packet[1] == 0)

@@ -30,7 +30,7 @@ namespace Helper
 			quickLookUpListArrayServer = HelperMethods.Instance.getQuickLookUpListArrayServer();
 		}
 
-		public byte[] GenerateEncryptedPacket(byte[] data, bool isClient)
+		public byte[] generateEncryptedPacket(byte[] data, bool isClient)
 		{
 
 			MemoryStream allBits = new MemoryStream(); // must be replaced in a final version with a fast structure

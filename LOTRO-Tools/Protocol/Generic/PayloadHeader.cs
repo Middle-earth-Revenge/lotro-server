@@ -166,7 +166,7 @@ namespace Protocol.Generic
                 }
                 else // packet with client session id is encrypted: decrypt byte[] and create new instance of reader
                 {
-                    DecryptPacket dp = new DecryptPacket();
+                    Decrypt dp = new Decrypt();
 
                     //byte[] org = ber.ReadBytes(packet.Length - 2);
 
