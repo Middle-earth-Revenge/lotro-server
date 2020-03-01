@@ -187,7 +187,7 @@ namespace Server
                         }
                         else
                         {
-                            Helper.DecryptPacket dp = new Helper.DecryptPacket();
+                            Helper.Decrypt dp = new Helper.Decrypt();
 
                             byte[] decrypted = dp.generateDecryptedPacket(rawPacket, true);
 

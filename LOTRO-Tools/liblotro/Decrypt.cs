@@ -1,17 +1,19 @@
 /*
  * Short explaination how this class works:
  * 
- * Call 'generateDecryptedPacket(your raw packet in byte[], true if it'S a client packet; false if it's a server packet);'. Returns the decrypted packet.
+ * Call 'GenerateDecryptedPacket(your raw packet in byte[], true if it'S a client packet; false if it's a server packet);'. Returns the decrypted packet.
  * A raw client or server packet is only the "data part" of the udp packet, not the whole packet with checksum, port and ip adress,...
  * The lotro client uses look up tables for decryption as well. They maybe change with newer versions of the client. But, they can easily extracted from hex dump
  * when the client is running. They don't exist in the .exe while not running! Maybe the client loads the values from the zipped files?
  * 
  */
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
-namespace LOTRO
+namespace Helper
 {
 
 	public class Decrypt
@@ -21,7 +23,6 @@ namespace LOTRO
 		readonly List<byte[][]> lookUpListClient;
 		readonly int[,] jumpTableServer;
 		readonly List<byte[][]> lookUpListServer;
-		int startPosition;
 		int lastIndex; // last index has to be keept til new value is found
 
 
@@ -31,6 +32,56 @@ namespace LOTRO
 			lookUpListClient = HelperMethods.Instance.getLookUpListClient();
 			jumpTableServer = HelperMethods.Instance.getJumpTableServer();
 			lookUpListServer = HelperMethods.Instance.getLookUpListServer();
+		}
+
+		public BEBinaryReader decrypt(BEBinaryReader ber, bool clientPacket)
+		{
+			MemoryStream memoryStream = new MemoryStream();
+			BEBinaryWriter bEBinaryWriter = new BEBinaryWriter(memoryStream, Encoding.UTF8);
+			int startPosition = 4;
+			try
+			{
+				while (ber.BaseStream.Position < ber.BaseStream.Length)
+				{
+					byte[] byte_ = ber.ReadBytes(4);
+					byte[] buffer = processBlock(byte_, clientPacket, startPosition);
+					startPosition = 0;
+					bEBinaryWriter.Write(buffer);
+				}
+			}
+			catch (Exception)
+			{
+			}
+			ber.BaseStream.Close();
+			ber.BaseStream.Dispose();
+			memoryStream.Position = 0L;
+			return new BEBinaryReader(memoryStream, Encoding.UTF8);
+		}
+
+		public BEBinaryReader decryptClientPacket(BEBinaryReader ber, ushort sessionID)
+		{
+			MemoryStream memoryStream = new MemoryStream();
+			BEBinaryWriter bEBinaryWriter = new BEBinaryWriter(memoryStream, Encoding.UTF8);
+			bEBinaryWriter.WriteUInt16BE(sessionID);
+			int startPosition = 4;
+			try
+			{
+				while (ber.BaseStream.Position < ber.BaseStream.Length)
+				{
+					byte[] byte_ = ber.ReadBytes(4);
+					byte[] buffer = this.method_0(byte_, startPosition);
+					startPosition = 0;
+					bEBinaryWriter.Write(buffer);
+				}
+			}
+			catch (Exception)
+			{
+			}
+			ber.BaseStream.Close();
+			ber.BaseStream.Dispose();
+			memoryStream.Position = 0L;
+			ber = new BEBinaryReader(memoryStream, Encoding.UTF8);
+			return ber;
 		}
 
 		// decrypts both, server- and client packets
@@ -67,17 +118,14 @@ namespace LOTRO
             }
 
 			byte[] tempResult = new byte[packet.Length * 16];
-			int pos = 0;
-			startPosition = 4; // the first 4 Bits in the first block are skiped
-			lastIndex = 0;
 
-			// Returns the final decrypted packet
-			byte[] decryptedPacket = null;
+			int startPosition = 4; // the first 4 Bits in the first block are skiped
+			lastIndex = 0;
 
 			// First 2 Bytes are the same in the decrypted packet, Write them to temp array
 			tempResult[0] = packet[0];
 			tempResult[1] = packet[1];
-			pos = 2;
+			int pos = 2;
 
 			// Decrypt blocks of 4 Byte
 			long lengthPacket = packet.Length - 2; // first 2 Bytes already read and have nothing to do with the decrypted packet
@@ -90,7 +138,7 @@ namespace LOTRO
 			for (int i = 0; i < numberOfBlocks; i++)
 			{
 				Buffer.BlockCopy(packet, (i*4) + 2, block, 0, 4);
-				byte[] decryptedBlock = processBlock(block, isClientPacket);
+				byte[] decryptedBlock = processBlock(block, isClientPacket, startPosition);
 				Buffer.BlockCopy(decryptedBlock, 0, tempResult, pos, decryptedBlock.Length);
 				pos += decryptedBlock.Length;
 				startPosition = 0;
@@ -100,17 +148,50 @@ namespace LOTRO
 			// Decrypt last block
 			if (lastBlockLength > 0)
 			{
-				Buffer.BlockCopy(packet, (int)lengthPacket - lastBlockLength +2, lastBlock, 0, lastBlockLength);
-				byte[] decryptedBlock = processBlock(lastBlock, isClientPacket);
+				Buffer.BlockCopy(packet, (int)lengthPacket - lastBlockLength + 2, lastBlock, 0, lastBlockLength);
+				byte[] decryptedBlock = processBlock(lastBlock, isClientPacket, startPosition);
 				Buffer.BlockCopy(decryptedBlock, 0, tempResult, pos, decryptedBlock.Length);
 				pos += decryptedBlock.Length;
 			}
 
-			decryptedPacket = new byte[pos];
+			// Returns the final decrypted packet
+			byte[] decryptedPacket = new byte[pos];
 			Buffer.BlockCopy(tempResult, 0, decryptedPacket, 0, pos);
-
 			return decryptedPacket;
+		}
 
+		byte[] method_0(byte[] block, int startPosition)
+		{
+			int num = 16372;
+			byte[] tempResult = new byte[block.Length * 16];
+			int pos = 0;
+			BitArray bitArray = new BitArray(block);
+			for (int i = startPosition; i < bitArray.Length; i++)
+			{
+				int column = bitArray.Get(i) ? 1 : 0;
+				if (jumpTableClient[lastIndex, column] >= 0)
+				{
+					lastIndex = jumpTableClient[lastIndex, column];
+				}
+				else
+				{
+					int index = jumpTableClient[lastIndex, column] + num;
+					byte[][] lookUpEntry = lookUpListClient[index];
+					byte[] lookUpValue = lookUpEntry[0];
+					try
+					{
+						Buffer.BlockCopy(lookUpValue, 0, tempResult, pos, lookUpValue.Length);
+					}
+					catch (Exception)
+					{
+					}
+					pos += lookUpValue.Length;
+					lastIndex = 0;
+				}
+			}
+			byte[] result = new byte[pos];
+			Buffer.BlockCopy(tempResult, 0, result, 0, pos);
+			return result;
 		}
 
 		/*  This is how the decryption is done:
@@ -128,7 +209,7 @@ namespace LOTRO
 		 * 5. Get the value which is given in the second look-up-table
 		 * 6. Start with 4 again til there are no bits left in the array
 		 */
-		byte[] processBlock(byte[] block, bool client)
+		byte[] processBlock(byte[] block, bool client, int startPosition)
 		{
 			int[,] jumpTable;
 			List<byte[][]> lookUpList;
@@ -156,20 +237,16 @@ namespace LOTRO
 			//Array.Reverse(block); BitArray is reversing bytes default
 
 			BitArray bitArray = new BitArray(block);
-
-			int index = 0;
-
 			for (int i = startPosition; i < bitArray.Length; i++)
 			{
 				int column = bitArray.Get(i) ? 1 : 0;
-
 				if (jumpTable[lastIndex, column] >= 0)
 				{
 					lastIndex = jumpTable[lastIndex, column];
 				}
 				else
 				{
-					index = jumpTable[lastIndex, column] + offset;
+					int index = jumpTable[lastIndex, column] + offset;
 
 					byte[][] lookUpEntry = lookUpList[index];
 					byte[] lookUpValue = lookUpEntry[0];
@@ -180,24 +257,18 @@ namespace LOTRO
 					}
 					catch (Exception e)
 					{
-
 						System.Diagnostics.Debug.WriteLine(e);
 					}
 
 					pos += lookUpValue.Length;
-
 					lastIndex = 0;
 				}
-
 			}
 
 			byte[] result = new byte[pos];
-
 			Buffer.BlockCopy(tempResult, 0, result, 0, pos);
-
 			return result;
 		}
-
 
 	}
 }

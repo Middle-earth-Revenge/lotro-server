@@ -58,7 +58,7 @@ namespace Server
             {
                 // Decrypt the incoming packet
                 // afterwards the beBinaryReader's base stream is decrypted
-                DecryptPacket dp = new DecryptPacket();
+                Decrypt dp = new Decrypt();
                 beBinaryReader = dp.decryptClientPacket(beBinaryReader, sessionID);
 
                 long tmp = beBinaryReader.BaseStream.Position;
