@@ -29,13 +29,13 @@ namespace LOTROPacketCaptureAndAutoDecryption
         {
             var packet = Packet.ParsePacket(e.Packet.LinkLayerType, e.Packet.Data);
 
-			var udpPacket = packet.Extract(typeof(UdpPacket));
+			var udpPacket = packet.Extract<UdpPacket>();
             if (udpPacket != null)
             {
                 //DateTime time = e.Packet.Timeval.Date;
                 //int len = e.Packet.Data.Length;
 
-                var ipPacket = (IpPacket)udpPacket.ParentPacket;
+                var ipPacket = udpPacket.ParentPacket as IPPacket;
 
                 byte[] data = udpPacket.PayloadData;
 

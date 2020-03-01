@@ -65,10 +65,10 @@ namespace LOTROE2012
             if (Settings.Config.Instance.Debug)
             {
                 TextWriterTraceListener listener1 = new TextWriterTraceListener(System.Console.Out);
-                Debug.Listeners.Add(listener1);
+                Trace.Listeners.Add(listener1);
 
                 TextWriterTraceListener listener2 = new TextWriterTraceListener(Settings.Config.Instance.LogFolder + "\\" + Settings.Config.Instance.DebugLogFile);
-                Debug.Listeners.Add(listener2);
+                Trace.Listeners.Add(listener2);
             }
 
             // Test the Helper works

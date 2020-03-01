@@ -1,7 +1,7 @@
 /*
  * Short explaination how this class works:
  * 
- * Call 'generateEncryptedPacket(your raw packet in byte[], true if it'S a client packet; false if it's a server packet);'. Returns the encrypted packet.
+ * Call 'GenerateEncryptedPacket(your raw packet in byte[], true if it'S a client packet; false if it's a server packet);'. Returns the encrypted packet.
  * The lotro client uses look up tables for encryption as well. They maybe change with newer versions of the client. But, they can easily extracted from hex dump
  * when the client is running. They don't exist in the .exe while not running! Maybe the client loads the values from the zipped files?
  * 
