@@ -37,6 +37,8 @@ namespace Helper
 		readonly byte[] clear = { 0x0, 0x0, 0x0, 0x0 }; // for not final check
 		
 		//readonly string fileNameChecksumArray = "data" + Path.DirectorySeparatorChar + "checksums";
+		Checksum checksum;
+
 		static readonly HelperMethods INSTANCE = new HelperMethods();
 
 		static readonly object LOCK = new object();
@@ -67,7 +69,7 @@ namespace Helper
 			jumpTableServer = generateJumpTable(fileNameTableJumpServer);
 			quickLookUpServer = new byte[16125][]; // there are 16125 values
 			lookUpListServer = generateLookUpTableServer(fileNameTableLookUpServer);
-			
+			checksum = new Checksum();
 		}
 		
 		public int[,] getJumpTableClient()
@@ -80,6 +82,45 @@ namespace Helper
 			return lookUpListClient;
 		}
 		
+		public uint getChecksumFromData(byte[] data)
+		{
+			return checksum.generateChecksumFromData(data);
+		}
+
+		public uint getChecksumFromHeader(byte[] header)
+		{
+			return checksum.generateChecksumFromHead(header);
+		}
+
+		public uint generateChecksumForHeader(ushort sessionID, ushort dataLength, byte[] action, uint sequenceNr, uint dataChecksum, uint ackNr)
+		{
+			uint num = BitConverter.ToUInt32(new byte[]
+			{
+				221,
+				112,
+				221,
+				186
+			}, 0);
+			byte[] array = new byte[4];
+			array[2] = 20;
+			uint num2 = BitConverter.ToUInt32(array, 0);
+			Array.Reverse(action);
+			uint num3 = BitConverter.ToUInt32(action, 0);
+			uint num4 = (uint)((uint)sessionID << 16);
+			uint num5 = num4 + (uint)dataLength;
+			num += num5;
+			num += num2;
+			num += num3;
+			num += sequenceNr;
+			num += ackNr;
+			return dataChecksum + num;
+		}
+
+		public uint getDefaultHeadChecksum(byte[] header)
+		{
+			return checksum.generateDefaultHeadChecksum(header);
+		}
+
 		int[,] generateJumpTable(string fileInputName)
 		{
 			FileStream fsRead = new FileStream(@fileInputName, FileMode.Open, FileAccess.Read);
