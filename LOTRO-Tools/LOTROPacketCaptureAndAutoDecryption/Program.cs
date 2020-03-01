@@ -4,8 +4,7 @@ using PacketDotNet;
 using System.Net;
 using System.Net.Sockets;
 using System.IO;
-using LOTRO;
-using SharpPcap.LibPcap;
+using Helper;
 
 namespace LOTROPacketCaptureAndAutoDecryption
 {
